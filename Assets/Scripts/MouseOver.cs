@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class MouseOverScript : MonoBehaviour {
+public class MouseOver : MonoBehaviour {
 
 	void OnMouseDown () {
 		SquareGenerator sg = GameObject.Find ("MapGenerator").GetComponent<SquareGenerator>();

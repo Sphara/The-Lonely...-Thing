@@ -2,6 +2,10 @@
 using UnityEngine.UI;
 using System.Collections;
 
+/// <summary>
+/// FPS count & various GUI stuff (player position tracker atm)
+/// </summary>
+
 public class HUDFPS : MonoBehaviour 
 {
 	public  float updateInterval = 0.5F;

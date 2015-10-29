@@ -6,7 +6,7 @@
 	<ProductVersion>10.0.20506</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
 	<RootNamespace></RootNamespace>
-	<ProjectGuid>{75D0C4F7-6517-A5B4-CDB6-AB64CB759B18}</ProjectGuid>
+	<ProjectGuid>{57730C6A-48D7-9FEE-1FF2-DE7D993F2DD0}</ProjectGuid>
 	<OutputType>Library</OutputType>
 	<AppDesignerFolder>Properties</AppDesignerFolder>
 	<AssemblyName>Assembly-CSharp</AssemblyName>
@@ -47,12 +47,12 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\CameraController.cs" />
      <Compile Include="Assets\Scripts\Controller.cs" />
-     <Compile Include="Assets\Scripts\DiffusionScript.cs" />
+     <Compile Include="Assets\Scripts\Diffusion.cs" />
      <Compile Include="Assets\Scripts\GameDefines.cs" />
      <Compile Include="Assets\Scripts\HUDFPS.cs" />
      <Compile Include="Assets\Scripts\MapGenerator.cs" />
-     <Compile Include="Assets\Scripts\MobSpawnerScript.cs" />
-     <Compile Include="Assets\Scripts\MouseOverScript.cs" />
+     <Compile Include="Assets\Scripts\MobSpawner.cs" />
+     <Compile Include="Assets\Scripts\MouseOver.cs" />
      <Compile Include="Assets\Scripts\Player.cs" />
      <Compile Include="Assets\Scripts\SquareGenerator.cs" />
      <Compile Include="Assets\Scripts\Teleporter.cs" />

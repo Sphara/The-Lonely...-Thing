@@ -1,6 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+///  Controller made by Sebastian Lague (https://www.youtube.com/watch?v=MbWK8bCAU2w) tweaked a bit
+/// </summary>
+
 [RequireComponent(typeof(BoxCollider2D))]
 public class Controller : MonoBehaviour {
 
@@ -19,16 +23,18 @@ public class Controller : MonoBehaviour {
 
 	RaycastOrigins raycastOrigins;
 	public CollisionsInfo collisions;
-
-	// Unity functions
-
+	
 	void Start() {
 		boxCollider = GetComponent<BoxCollider2D> ();
 		CalculateRaySpacing ();
 		
 	}
 
-	// MOOOOOOOOOOOVE
+	/// <summary>
+	/// Move the object, checking for collisions with raycasts.
+	/// Handles only ascending slopes for now (gonna implement descending slopes/double jump/wall jump & other stuff later)
+	/// </summary>
+	/// <param name="velocity">Actual velocity of the object</param>
 
 	public void Move (Vector3 velocity) {
 		UpdateRaycastOrigins ();
@@ -40,12 +46,9 @@ public class Controller : MonoBehaviour {
 		if (velocity.y != 0)
 			VerticalCollision (ref velocity);
 
-		//boxCollider.attachedRigidbody.MovePosition (velocity);
 		transform.Translate (velocity);
 	}
-
-	// Collision
-
+	
 	void VerticalCollision (ref Vector3 velocity) {
 		float YDirection = Mathf.Sign (velocity.y);
 		float rayLength = Mathf.Abs (velocity.y) + skinWidth;
@@ -136,9 +139,7 @@ public class Controller : MonoBehaviour {
 			
 		}
 	}
-
-	// Slopy stuff
-
+	
 	void ClimbSlope (ref Vector3 velocity, float slopeAngle) {
 		float moveDistance = Mathf.Abs (velocity.x);
 		float climbVelocity = Mathf.Sin (slopeAngle * Mathf.Deg2Rad) * moveDistance;
@@ -151,9 +152,7 @@ public class Controller : MonoBehaviour {
 			collisions.slopeAngle = slopeAngle;
 		}
 	}
-
-	// Raycasting stuff
-
+	
 	void UpdateRaycastOrigins() {
 		Bounds bounds = boxCollider.bounds;
 		bounds.Expand (skinWidth * -2);
@@ -175,9 +174,7 @@ public class Controller : MonoBehaviour {
 		horizontalRaySpacing = bounds.size.y / (horizontalRayCount - 1);
 		verticalRaySpacing = bounds.size.x / (verticalRayCount - 1);
 	}
-
-	// Structs
-
+	
 	struct RaycastOrigins {
 		public Vector2 topLeft, topRight;
 		public Vector2 bottomLeft, bottomRight;

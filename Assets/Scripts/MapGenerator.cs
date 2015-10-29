@@ -74,7 +74,7 @@ public class MapGenerator : MonoBehaviour {
 		tp = GameObject.Find("Teleporter").GetComponent<Teleporter> ();
 		GenerateMap();
 		tp.TeleportPlayerInSquareMap (GameObject.Find("Player"));
-		GameObject.Find ("MobSpawner").GetComponent<MobSpawnerScript> ().setStuff (true);
+		GameObject.Find ("MobSpawner").GetComponent<MobSpawner> ().setSpawn (true);
 	}
 	
 	void Update() {

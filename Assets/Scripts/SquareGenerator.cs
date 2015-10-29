@@ -6,7 +6,7 @@ public class SquareGenerator : MonoBehaviour {
 
 	GameObject tileCollection;
 	Dictionary<TileType, GameObject> tilesToGO;
-	Dictionary<Coord, DiffusionScript> _map;
+	Dictionary<Coord, Diffusion> _map;
 
 	[Header("Tiles")]
 	public GameObject DIRT;
@@ -44,7 +44,7 @@ public class SquareGenerator : MonoBehaviour {
 		tileCollection = new GameObject ();
 		tileCollection.name = "Tiles";
 
-		_map = new Dictionary<Coord, DiffusionScript> ();
+		_map = new Dictionary<Coord, Diffusion> ();
 		tilesToGO = new Dictionary<TileType, GameObject> ();
 		
 		tilesToGO.Add (TileType.DIRT, DIRT);
@@ -106,19 +106,19 @@ public class SquareGenerator : MonoBehaviour {
 				tile.transform.parent = tileCollection.transform;
 
 				if (map[i, j] == TileType.NONE)
-					_map.Add(new Coord(i, j), tile.GetComponent<DiffusionScript>());
+					_map.Add(new Coord(i, j), tile.GetComponent<Diffusion>());
 
 			}
 		}
 
-		foreach (KeyValuePair<Coord, DiffusionScript> kvp in _map) {
+		foreach (KeyValuePair<Coord, Diffusion> kvp in _map) {
 			AttachNeighbours(kvp.Key.x, kvp.Key.y);
 		}
 
 	}
 
 	public void AddToMap(int x, int y) {
-		DiffusionScript ds;
+		Diffusion ds;
 		Coord coord = new Coord (x, y);
 
 		_map.TryGetValue (coord, out ds);
@@ -129,7 +129,7 @@ public class SquareGenerator : MonoBehaviour {
 		GameObject tile = (GameObject)Instantiate(getTile(TileType.NONE), new Vector3(x, y, 0), Quaternion.identity);
 		tile.name = "Tile[" + x + "][" + y + "]";
 		tile.transform.parent = tileCollection.transform;
-		_map.Add (coord, tile.GetComponent<DiffusionScript>());
+		_map.Add (coord, tile.GetComponent<Diffusion>());
 		AttachNeighbours (x, y);
 		AttachNeighbours (x + 1, y);
 		AttachNeighbours (x, y + 1);
@@ -138,12 +138,12 @@ public class SquareGenerator : MonoBehaviour {
 	}
 
 	public void AttachNeighbours(int x, int y) {
-		DiffusionScript right;
-		DiffusionScript left;
-		DiffusionScript up;
-		DiffusionScript down;
+		Diffusion right;
+		Diffusion left;
+		Diffusion up;
+		Diffusion down;
 
-		DiffusionScript ds;
+		Diffusion ds;
 
 		_map.TryGetValue(new Coord(x, y), out ds);
 
@@ -160,7 +160,7 @@ public class SquareGenerator : MonoBehaviour {
 
 	public Vector2 LookForPlayer (int x, int y) {
 		Coord coord = new Coord (x, y);
-		DiffusionScript ds;
+		Diffusion ds;
 		
 		_map.TryGetValue (coord, out ds);
 
@@ -169,12 +169,12 @@ public class SquareGenerator : MonoBehaviour {
 
 	public void DiffuseValue(int x, int y, int value) {
 		Coord coord = new Coord (x, y);
-		DiffusionScript ds;
+		Diffusion ds;
 
 		_map.TryGetValue (coord, out ds);
 
 		if (ds)
-			ds.DiffuseStuff (value, Vector2.zero);
+			ds.DiffuseValue (value, Vector2.zero);
 	}
 
 	public void deleteSquares() {
