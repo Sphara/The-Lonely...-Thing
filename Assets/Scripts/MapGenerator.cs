@@ -45,6 +45,21 @@ enum BiomeType {
 	DEFAULT = 5
 };
 
+/// <summary>
+/// The procedural map generator. 
+/// 
+/// There's some basic biome generation (floodfill for now, to change) & cave generation via cellular algorithms
+/// 
+/// TODO: Add ore generation
+/// TODO: Change Biome generation
+/// TODO: Change Cave generation to have a more "real" world
+/// TODO: "Fancify" the map
+/// 
+/// Yeah, i kinda want to change everything
+/// 
+/// Creates a tile per unit of terrain, not a big mesh. I'm not using Tiled2Unity because i'm gonna wait for 5.4 and native integration of tilemaps (ETA march 2016 iirc)
+/// </summary>
+
 public class MapGenerator : MonoBehaviour {
 
 	[Header("Map Attributes")]
@@ -58,22 +73,20 @@ public class MapGenerator : MonoBehaviour {
 	[Range(0,100)]
 	public int randomFillPercent;
 	private int SEED_SIZE = 32;
-	private const string _chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz123456789";
+	private const string seedCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz123456789";
 	TileType[,] map;
 	TileType[,] borderedMap;
-	BiomeType[,] biomes;
+	BiomeType[,] biomesMap;
 	
-	SquareGenerator squareGen;
-	Teleporter tp;
-
-	/* Unity functions */
-
+	SquareGenerator squareGenerator;
+	Teleporter teleporter;
+	
 	void Start() {
-		squareGen = GetComponent<SquareGenerator> ();
-		squareGen.Initialize ();
-		tp = GameObject.Find("Teleporter").GetComponent<Teleporter> ();
+		squareGenerator = GetComponent<SquareGenerator> ();
+		squareGenerator.Initialize ();
+		teleporter = GameObject.Find("Teleporter").GetComponent<Teleporter> ();
 		GenerateMap();
-		tp.TeleportPlayerInSquareMap (GameObject.Find("Player"));
+		teleporter.TeleportPlayerInSquareMap (GameObject.Find("Player"));
 		GameObject.Find ("MobSpawner").GetComponent<MobSpawner> ().setSpawn (true);
 	}
 	
@@ -81,12 +94,10 @@ public class MapGenerator : MonoBehaviour {
 
 		if (Input.GetKeyDown (KeyCode.R)) {
 			GenerateMap ();
-			tp.TeleportPlayerInSquareMap (GameObject.Find ("Player"));
+			teleporter.TeleportPlayerInSquareMap (GameObject.Find ("Player"));
 		}
 	}
-
-	/* Main generation */
-
+	
 	void GenerateMap() {
 		map = new TileType[width, height];
 		borderedMap = new TileType[width + borderSize * 2, height + borderSize * 2];
@@ -106,8 +117,7 @@ public class MapGenerator : MonoBehaviour {
 
 	void fancifyMap () {
 		setSurface ();
-
-		// Do some cool stuff to process the map (grow grass & place grass blocks, place sand...)
+		/* I have to put some more stuff here */
 	}
 
 	void RandomFillMap() {
@@ -147,7 +157,7 @@ public class MapGenerator : MonoBehaviour {
 	}
 
 	void GenerateBiomes () {
-		biomes = new BiomeType[width, height];
+		biomesMap = new BiomeType[width, height];
 		Queue<Coord> queue = new Queue<Coord> ();
 		BiomeType actualType;
 
@@ -155,31 +165,31 @@ public class MapGenerator : MonoBehaviour {
 			int x = UnityEngine.Random.Range (1, map.GetLength(0) - 1);
 			int y = UnityEngine.Random.Range (1, map.GetLength(1) - 1);
 
-			biomes[x, y] = getRandomBiomeType();
+			biomesMap[x, y] = getRandomBiomeType();
 			queue.Enqueue(new Coord(x, y));
 		}
 
 		while (queue.Count != 0) {
 			Coord dequeued = queue.Dequeue();
-			actualType = biomes[dequeued.x, dequeued.y];
+			actualType = biomesMap[dequeued.x, dequeued.y];
 
-			if (dequeued.x < width - 1 && biomes[dequeued.x + 1, dequeued.y] == BiomeType.NONE) {
-				biomes[dequeued.x + 1, dequeued.y] = actualType;
+			if (dequeued.x < width - 1 && biomesMap[dequeued.x + 1, dequeued.y] == BiomeType.NONE) {
+				biomesMap[dequeued.x + 1, dequeued.y] = actualType;
 				queue.Enqueue(new Coord(dequeued.x + 1, dequeued.y));
 			}
 
-			if (dequeued.x > 0 && biomes[dequeued.x - 1, dequeued.y] == BiomeType.NONE) {
-				biomes[dequeued.x - 1, dequeued.y] = actualType;
+			if (dequeued.x > 0 && biomesMap[dequeued.x - 1, dequeued.y] == BiomeType.NONE) {
+				biomesMap[dequeued.x - 1, dequeued.y] = actualType;
 				queue.Enqueue(new Coord(dequeued.x - 1, dequeued.y));
 			}
 
-			if (dequeued.y > 0 && biomes[dequeued.x, dequeued.y - 1] == BiomeType.NONE) {
-				biomes[dequeued.x, dequeued.y - 1] = actualType;
+			if (dequeued.y > 0 && biomesMap[dequeued.x, dequeued.y - 1] == BiomeType.NONE) {
+				biomesMap[dequeued.x, dequeued.y - 1] = actualType;
 				queue.Enqueue(new Coord(dequeued.x, dequeued.y - 1));
 			}
 
-			if (dequeued.y < height - 1 && biomes[dequeued.x, dequeued.y + 1] == BiomeType.NONE) {
-				biomes[dequeued.x, dequeued.y + 1] = actualType;
+			if (dequeued.y < height - 1 && biomesMap[dequeued.x, dequeued.y + 1] == BiomeType.NONE) {
+				biomesMap[dequeued.x, dequeued.y + 1] = actualType;
 				queue.Enqueue(new Coord(dequeued.x, dequeued.y + 1));
 			}
 		}
@@ -192,7 +202,7 @@ public class MapGenerator : MonoBehaviour {
 
 				if (map[x, y] == TileType.DIRT) {
 
-					switch (biomes[x, y])
+					switch (biomesMap[x, y])
 					{
 					case BiomeType.GREYSTONE:
 						map[x, y] = TileType.GREYSTONE;
@@ -221,8 +231,6 @@ public class MapGenerator : MonoBehaviour {
 
 		Queue<Coord> queue = new Queue<Coord> ();
 
-		/* Set surface tile to whatever it is supposed to be */
-
 		for (int x = 0; x < map.GetLength(0); x ++) {
 			for (int y = 0; y < map.GetLength(1); y ++) {
 				
@@ -232,9 +240,9 @@ public class MapGenerator : MonoBehaviour {
 					}
 
 					if (map [x, y] == TileType.STONE && map [x, y + 1] == TileType.NONE) {
-						if (biomes [x, y] == BiomeType.SAND)
+						if (biomesMap [x, y] == BiomeType.SAND)
 							map [x, y] = TileType.STONE_SAND;
-						else if (biomes [x, y] == BiomeType.SNOW)
+						else if (biomesMap [x, y] == BiomeType.SNOW)
 							map [x, y] = TileType.STONE_SNOW;
 						else
 							map [x, y] = TileType.STONE_DIRT;
@@ -245,11 +253,9 @@ public class MapGenerator : MonoBehaviour {
 			}
 		}
 
-		/* Add some stuff above these tiles */
-
 		while (queue.Count != 0) {
 			Coord tile = queue.Dequeue();
-			BiomeType tileBiome = biomes[tile.x, tile.y];
+			BiomeType tileBiome = biomesMap[tile.x, tile.y];
 			TileType tileToAdd;
 
 			if (tileBiome == BiomeType.SAND)
@@ -271,16 +277,12 @@ public class MapGenerator : MonoBehaviour {
 		}
 		
 	}
-
-	/* Transform map to gameobjects */
-
+	
 	void generateSquares() {
-		squareGen.deleteSquares ();
-		squareGen.GenerateSquares (borderedMap);
+		squareGenerator.deleteSquares ();
+		squareGenerator.GenerateSquares (borderedMap);
 	}
-
-	/* utils */
-
+	
 	void updateBorderedMap ()	{
 		borderedMap = new TileType[width + borderSize * 2,height + borderSize * 2];
 
@@ -295,7 +297,7 @@ public class MapGenerator : MonoBehaviour {
 			}
 		}
 
-		tp.setMap (borderedMap);
+		teleporter.setMap (borderedMap);
 	}
 
 	bool IsInMapRange(int x, int y) {
@@ -308,7 +310,7 @@ public class MapGenerator : MonoBehaviour {
 		
 		for (int i = 0; i < size; i++)
 		{
-			buffer[i] = _chars[(int)UnityEngine.Random.Range(0, _chars.Length)];
+			buffer[i] = seedCharacters[(int)UnityEngine.Random.Range(0, seedCharacters.Length)];
 		}
 
 		return new string(buffer);

@@ -1,6 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// A file with some useful structs/enums (First created to avoid duplicating the Coord struct)
+/// </summary>
+
 public struct Coord {
 	public int x;
 	public int y;

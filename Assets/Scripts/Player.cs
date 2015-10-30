@@ -79,7 +79,9 @@ public class Player : MonoBehaviour {
 		/* Update diffusion values for pathfinding */
 
 		int diffusionWeight = 10;
-		sg.DiffuseValue((int)Mathf.Round(transform.position.x), (int)Mathf.Round(transform.position.y), diffusionWeight);
+
+		if (sg != null)
+			sg.DiffuseValue((int)Mathf.Round(transform.position.x), (int)Mathf.Round(transform.position.y), diffusionWeight);
 
 	}
 

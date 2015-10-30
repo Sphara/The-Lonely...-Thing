@@ -11,9 +11,9 @@ public class HUDFPS : MonoBehaviour
 	public  float updateInterval = 0.5F;
 	public GameObject player;
 
-	private float accum   = 0; // FPS accumulated over the interval
-	private int   frames  = 0; // Frames drawn over the interval
-	private float timeleft; // Left time for current interval
+	private float accum   = 0;
+	private int   frames  = 0;
+	private float timeleft;
 	
 	string format;
 
