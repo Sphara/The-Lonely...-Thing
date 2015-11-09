@@ -1,6 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+
+/// <summary>
+/// Test mob. An ant, actually.
+/// </summary>
+
 [RequireComponent(typeof(Controller))]
 public class TestMob : MonoBehaviour {
 
@@ -63,7 +68,6 @@ public class TestMob : MonoBehaviour {
 		}
 	}
 
-	// Update is called once per frame
 	void Update () {
 	
 		if (controller.collisions.above || controller.collisions.below)

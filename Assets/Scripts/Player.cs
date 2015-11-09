@@ -21,7 +21,7 @@ public class Player : MonoBehaviour {
 	Vector3 velocity;
 	private Transform childTransform;
 	private Animator animator;
-	private SquareGenerator sg;
+	public SquareGenerator sg;
 	
 	void Start () 
 	{
@@ -29,7 +29,6 @@ public class Player : MonoBehaviour {
 		animator = GetComponentInChildren<Animator> ();
 		gravity = -(2 * jumpHeight) / Mathf.Pow (timeToJumpApex, 2);
 		jumpVelocity = Mathf.Abs (gravity) * timeToJumpApex;
-		sg = GameObject.Find ("MapGenerator").GetComponent<SquareGenerator>();
 
 		foreach (Transform child in transform)
 		{

@@ -2,6 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 
+/// <summary>
+/// Class used to transform map into gameobjects
+/// </summary>
+/// 
 public class SquareGenerator : MonoBehaviour {
 
 	GameObject tileCollection;
@@ -39,7 +43,13 @@ public class SquareGenerator : MonoBehaviour {
 	public GameObject STONE_DIRT;
 	public GameObject LIMITS;
 	public GameObject EMPTY;
-	
+
+	/// <summary>
+	/// Initialize this instance.
+	/// 
+	/// I'm not using start() or awake() because i have to figure out how the script execution order works in unity. This'll be changed to start() once i get used to it
+	/// </summary>
+
 	public void Initialize () {
 		tileCollection = new GameObject ();
 		tileCollection.name = "Tiles";
@@ -92,6 +102,11 @@ public class SquareGenerator : MonoBehaviour {
 
 	}
 
+	/// <summary>
+	/// Generates the gameobjects.
+	/// </summary>
+	/// <param name="map">Map.</param>
+
 	public void GenerateSquares(TileType[,] map) {
 
 		GameObject tile;
@@ -117,6 +132,12 @@ public class SquareGenerator : MonoBehaviour {
 
 	}
 
+	/// <summary>
+	/// Adds a tile of air and attach it to the pathfinding grid.
+	/// </summary>
+	/// <param name="x">The x coordinate.</param>
+	/// <param name="y">The y coordinate.</param>
+
 	public void AddToMap(int x, int y) {
 		Diffusion ds;
 		Coord coord = new Coord (x, y);
@@ -137,7 +158,7 @@ public class SquareGenerator : MonoBehaviour {
 		AttachNeighbours (x - 1, y);
 	}
 
-	public void AttachNeighbours(int x, int y) {
+	void AttachNeighbours(int x, int y) {
 		Diffusion right;
 		Diffusion left;
 		Diffusion up;
@@ -158,6 +179,12 @@ public class SquareGenerator : MonoBehaviour {
 		ds.neighbours.setNeighbouhrs(up, down, left, right);
 	}
 
+	/// <summary>
+	/// Search for player from the X/Y tile.
+	/// </summary>
+	/// <returns>The for player.</returns>
+	/// <param name="x">The x coordinate.</param>
+	/// <param name="y">The y coordinate.</param>
 	public Vector2 LookForPlayer (int x, int y) {
 		Coord coord = new Coord (x, y);
 		Diffusion ds;
@@ -166,6 +193,13 @@ public class SquareGenerator : MonoBehaviour {
 
 		return ds ? ds.getDirection () : Vector2.zero;
 	}
+
+	/// <summary>
+	/// Diffuses the player position to help mobs finding it.
+	/// </summary>
+	/// <param name="x">The x coordinate.</param>
+	/// <param name="y">The y coordinate.</param>
+	/// <param name="value">Value.</param>
 
 	public void DiffuseValue(int x, int y, int value) {
 		Coord coord = new Coord (x, y);
@@ -177,6 +211,10 @@ public class SquareGenerator : MonoBehaviour {
 			ds.DiffuseValue (value, Vector2.zero);
 	}
 
+
+	/// <summary>
+	/// Reset the map
+	/// </summary>
 	public void deleteSquares() {
 		Destroy (tileCollection);
 		tileCollection = new GameObject ();

@@ -79,22 +79,23 @@ public class MapGenerator : MonoBehaviour {
 	BiomeType[,] biomesMap;
 	
 	SquareGenerator squareGenerator;
-	Teleporter teleporter;
+	public Teleporter teleporter;
+	public MobSpawner mobSpawner;
+	public GameObject player;
 	
 	void Start() {
 		squareGenerator = GetComponent<SquareGenerator> ();
 		squareGenerator.Initialize ();
-		teleporter = GameObject.Find("Teleporter").GetComponent<Teleporter> ();
 		GenerateMap();
-		teleporter.TeleportPlayerInSquareMap (GameObject.Find("Player"));
-		GameObject.Find ("MobSpawner").GetComponent<MobSpawner> ().setSpawn (true);
+		teleporter.TeleportPlayerInSquareMap (player);
+		mobSpawner.setSpawn (true);
 	}
 	
 	void Update() {
 
 		if (Input.GetKeyDown (KeyCode.R)) {
 			GenerateMap ();
-			teleporter.TeleportPlayerInSquareMap (GameObject.Find ("Player"));
+			teleporter.TeleportPlayerInSquareMap (player);
 		}
 	}
 	
