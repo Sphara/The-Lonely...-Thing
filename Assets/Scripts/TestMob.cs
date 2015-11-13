@@ -54,7 +54,6 @@ public class TestMob : MonoBehaviour {
 
 	void GoToPlayer () {
 
-		// HOTFIX
 		if (direction.x != 0 && direction.y != 0)
 			direction.y = 0;
 
