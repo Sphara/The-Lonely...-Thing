@@ -157,42 +157,53 @@ public class MapGenerator : MonoBehaviour {
 		updateBorderedMap ();
 	}
 
+	/// <summary>
+	/// Generate biomes.
+	/// 
+	/// At first i was using floodfill but the biomes were unnatural and ugly, so i modified it a bit and even though it's not perfect it's waaaaay better
+	/// </summary>
+
 	void GenerateBiomes () {
 		biomesMap = new BiomeType[width, height];
-		Queue<Coord> queue = new Queue<Coord> ();
+		List<Coord> queue = new List<Coord> ();
 		BiomeType actualType;
 
-		for (int i = 0; i < (int)((height * width) / 500); i++) { // I'll have to find out a better way to create biomes
+		for (int i = 0; i < (int)((height * width) / 500); i++) {
 			int x = UnityEngine.Random.Range (1, map.GetLength(0) - 1);
 			int y = UnityEngine.Random.Range (1, map.GetLength(1) - 1);
 
 			biomesMap[x, y] = getRandomBiomeType();
-			queue.Enqueue(new Coord(x, y));
+			queue.Add(new Coord(x, y));
 		}
 
 		while (queue.Count != 0) {
-			Coord dequeued = queue.Dequeue();
+			Coord dequeued = queue[0];
+			queue.RemoveAt(0);
 			actualType = biomesMap[dequeued.x, dequeued.y];
+			Coord newBiomeTile = new Coord();
+
+			List<Coord> list = new List<Coord>();
 
 			if (dequeued.x < width - 1 && biomesMap[dequeued.x + 1, dequeued.y] == BiomeType.NONE) {
 				biomesMap[dequeued.x + 1, dequeued.y] = actualType;
-				queue.Enqueue(new Coord(dequeued.x + 1, dequeued.y));
+				queue.Insert(UnityEngine.Random.Range(0, queue.Count), new Coord(dequeued.x + 1, dequeued.y));
 			}
 
 			if (dequeued.x > 0 && biomesMap[dequeued.x - 1, dequeued.y] == BiomeType.NONE) {
 				biomesMap[dequeued.x - 1, dequeued.y] = actualType;
-				queue.Enqueue(new Coord(dequeued.x - 1, dequeued.y));
+				queue.Insert(UnityEngine.Random.Range(0, queue.Count), new Coord(dequeued.x - 1, dequeued.y));
 			}
 
 			if (dequeued.y > 0 && biomesMap[dequeued.x, dequeued.y - 1] == BiomeType.NONE) {
 				biomesMap[dequeued.x, dequeued.y - 1] = actualType;
-				queue.Enqueue(new Coord(dequeued.x, dequeued.y - 1));
+				queue.Insert(UnityEngine.Random.Range(0, queue.Count), new Coord(dequeued.x, dequeued.y - 1));
 			}
 
 			if (dequeued.y < height - 1 && biomesMap[dequeued.x, dequeued.y + 1] == BiomeType.NONE) {
 				biomesMap[dequeued.x, dequeued.y + 1] = actualType;
-				queue.Enqueue(new Coord(dequeued.x, dequeued.y + 1));
+				queue.Insert(UnityEngine.Random.Range(0, queue.Count), new Coord(dequeued.x, dequeued.y + 1));
 			}
+
 		}
 	}
 
