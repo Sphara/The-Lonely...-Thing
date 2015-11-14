@@ -74,6 +74,7 @@ public class MapGenerator : MonoBehaviour {
 	[Range(0,100)]
 	public int randomFillPercent;
 	public int groundLevel = 50;
+	public int crustHeight = 5;
 
 	private int SEED_SIZE = 32;
 	private const string seedCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz123456789";
@@ -141,8 +142,10 @@ public class MapGenerator : MonoBehaviour {
 
 			for (int y = 0; y < height; y ++) {
 
-				if (y < groundHeight) {
+				if (y < (groundHeight - crustHeight)) {
 					map[x,y] = (pseudoRandom.Next(0,100) < randomFillPercent) ? TileType.DIRT : TileType.NONE;
+				} else if (y < groundHeight) {
+					map[x, y] = TileType.DIRT;
 				} else {
 					map[x,y] = TileType.NONE;
 				}
