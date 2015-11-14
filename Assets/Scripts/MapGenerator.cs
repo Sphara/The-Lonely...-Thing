@@ -55,7 +55,7 @@ enum BiomeType {
 /// TODO: Change Cave generation to have a more "real" world
 /// TODO: "Fancify" the map
 /// 
-/// Yeah, i kinda want to change everything
+/// Yeah, i want to change everything
 /// 
 /// Creates a tile per unit of terrain, not a big mesh. I'm not using Tiled2Unity because i'm gonna wait for 5.4 and native integration of tilemaps (ETA march 2016 iirc)
 /// </summary>
@@ -68,10 +68,13 @@ public class MapGenerator : MonoBehaviour {
 	public string seed;
 	public bool useRandomSeed;
 	public int borderSize;
-	public int smoothingFactor = 2;
 
+	[Range(0, 10)]
+	public int smoothingFactor = 2;
 	[Range(0,100)]
 	public int randomFillPercent;
+	public int groundLevel = 50;
+
 	private int SEED_SIZE = 32;
 	private const string seedCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz123456789";
 	TileType[,] map;
@@ -110,15 +113,16 @@ public class MapGenerator : MonoBehaviour {
 			SmoothMap ();
 		}
 
-		ApplyBiomes ();
-		fancifyMap ();
-		updateBorderedMap ();
-		generateSquares();
+		FancifyMap ();
+
+		UpdateBorderedMap ();
+		GenerateSquares();
 	}
 
-	void fancifyMap () {
-		setSurface ();
-		/* I have to put some more stuff here */
+	void FancifyMap () {
+
+		ApplyBiomes ();
+		SetSurface ();
 	}
 
 	void RandomFillMap() {
@@ -126,16 +130,21 @@ public class MapGenerator : MonoBehaviour {
 		if (useRandomSeed) {
 			seed = RandomString (SEED_SIZE);
 		}
-		
+
 		System.Random pseudoRandom = new System.Random(seed.GetHashCode());
 		
 		for (int x = 0; x < width; x ++) {
+
+			int groundHeight = PNoise(x, 0, 80, 15, 1);
+			groundHeight += PNoise(x, 0, 50, 30, 1);
+			groundHeight += groundLevel;
+
 			for (int y = 0; y < height; y ++) {
-				if (x == 0 || x == width-1 || y == 0 || y == height -1) {
-					map[x,y] = TileType.DIRT;
-				}
-				else {
-					map[x,y] = (pseudoRandom.Next(0,100) < randomFillPercent)? TileType.DIRT : TileType.NONE;
+
+				if (y < groundHeight) {
+					map[x,y] = (pseudoRandom.Next(0,100) < randomFillPercent) ? TileType.DIRT : TileType.NONE;
+				} else {
+					map[x,y] = TileType.NONE;
 				}
 			}
 		}
@@ -154,7 +163,7 @@ public class MapGenerator : MonoBehaviour {
 			}
 		}
 		
-		updateBorderedMap ();
+		UpdateBorderedMap ();
 	}
 
 	/// <summary>
@@ -165,43 +174,40 @@ public class MapGenerator : MonoBehaviour {
 
 	void GenerateBiomes () {
 		biomesMap = new BiomeType[width, height];
-		List<Coord> queue = new List<Coord> ();
+		List<Coord> tileList = new List<Coord> ();
 		BiomeType actualType;
 
 		for (int i = 0; i < (int)((height * width) / 500); i++) {
 			int x = UnityEngine.Random.Range (1, map.GetLength(0) - 1);
 			int y = UnityEngine.Random.Range (1, map.GetLength(1) - 1);
 
-			biomesMap[x, y] = getRandomBiomeType();
-			queue.Add(new Coord(x, y));
+			biomesMap[x, y] = GetRandomBiomeType();
+			tileList.Add(new Coord(x, y));
 		}
 
-		while (queue.Count != 0) {
-			Coord dequeued = queue[0];
-			queue.RemoveAt(0);
+		while (tileList.Count != 0) {
+			Coord dequeued = tileList[0];
+			tileList.RemoveAt(0);
 			actualType = biomesMap[dequeued.x, dequeued.y];
-			Coord newBiomeTile = new Coord();
-
-			List<Coord> list = new List<Coord>();
 
 			if (dequeued.x < width - 1 && biomesMap[dequeued.x + 1, dequeued.y] == BiomeType.NONE) {
 				biomesMap[dequeued.x + 1, dequeued.y] = actualType;
-				queue.Insert(UnityEngine.Random.Range(0, queue.Count), new Coord(dequeued.x + 1, dequeued.y));
+				tileList.Insert(UnityEngine.Random.Range(0, tileList.Count), new Coord(dequeued.x + 1, dequeued.y));
 			}
 
 			if (dequeued.x > 0 && biomesMap[dequeued.x - 1, dequeued.y] == BiomeType.NONE) {
 				biomesMap[dequeued.x - 1, dequeued.y] = actualType;
-				queue.Insert(UnityEngine.Random.Range(0, queue.Count), new Coord(dequeued.x - 1, dequeued.y));
+				tileList.Insert(UnityEngine.Random.Range(0, tileList.Count), new Coord(dequeued.x - 1, dequeued.y));
 			}
 
 			if (dequeued.y > 0 && biomesMap[dequeued.x, dequeued.y - 1] == BiomeType.NONE) {
 				biomesMap[dequeued.x, dequeued.y - 1] = actualType;
-				queue.Insert(UnityEngine.Random.Range(0, queue.Count), new Coord(dequeued.x, dequeued.y - 1));
+				tileList.Insert(UnityEngine.Random.Range(0, tileList.Count), new Coord(dequeued.x, dequeued.y - 1));
 			}
 
 			if (dequeued.y < height - 1 && biomesMap[dequeued.x, dequeued.y + 1] == BiomeType.NONE) {
 				biomesMap[dequeued.x, dequeued.y + 1] = actualType;
-				queue.Insert(UnityEngine.Random.Range(0, queue.Count), new Coord(dequeued.x, dequeued.y + 1));
+				tileList.Insert(UnityEngine.Random.Range(0, tileList.Count), new Coord(dequeued.x, dequeued.y + 1));
 			}
 
 		}
@@ -239,7 +245,7 @@ public class MapGenerator : MonoBehaviour {
 
 	}
 
-	void setSurface () {
+	void SetSurface () {
 
 		Queue<Coord> queue = new Queue<Coord> ();
 
@@ -290,12 +296,12 @@ public class MapGenerator : MonoBehaviour {
 		
 	}
 	
-	void generateSquares() {
+	void GenerateSquares() {
 		squareGenerator.deleteSquares ();
 		squareGenerator.GenerateSquares (borderedMap);
 	}
 	
-	void updateBorderedMap ()	{
+	void UpdateBorderedMap ()	{
 		borderedMap = new TileType[width + borderSize * 2,height + borderSize * 2];
 
 		for (int x = 0; x < borderedMap.GetLength(0); x ++) {
@@ -346,7 +352,11 @@ public class MapGenerator : MonoBehaviour {
 		return wallCount;
 	}
 
-	BiomeType getRandomBiomeType () {
+	int PNoise (int x, int y, float scale, float mag, float exp){
+		return (int) (Mathf.Pow ((Mathf.PerlinNoise(x / scale, y / scale) * mag), (exp))); 
+	}
+
+	BiomeType GetRandomBiomeType () {
 		Array biomesArray = Enum.GetValues (typeof(BiomeType));
 		return ((BiomeType)biomesArray.GetValue(UnityEngine.Random.Range (1, biomesArray.Length)));
 	}

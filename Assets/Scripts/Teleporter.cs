@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// TODO: Teleport to ground level, setup teleport points (home & stuff)
+/// </summary>
 public class Teleporter : MonoBehaviour {
 
 	TileType[,] _map;
