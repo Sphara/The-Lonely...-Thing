@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System;
@@ -36,7 +36,7 @@ public enum TileType {
 	LIMITS = 29
 };
 
-enum BiomeType {
+public enum BiomeType {
 	NONE = 0,
 	STONE = 1,
 	SNOW = 2,
@@ -54,6 +54,7 @@ enum BiomeType {
 /// TODO: Change Biome generation
 /// TODO: Change Cave generation to have a more "real" world
 /// TODO: "Fancify" the map
+/// TODO: Replace random generation of surface with some noise, prob. perlin
 /// 
 /// Yeah, i want to change everything
 /// 
@@ -86,10 +87,10 @@ public class MapGenerator : MonoBehaviour {
 	public Teleporter teleporter;
 	public MobSpawner mobSpawner;
 	public GameObject player;
+	public MineralFarm mineralFarm;
 	
 	void Start() {
 		squareGenerator = GetComponent<SquareGenerator> ();
-		squareGenerator.Initialize ();
 		GenerateMap();
 		teleporter.TeleportPlayerInSquareMap (player);
 		mobSpawner.setSpawn (true);
@@ -122,8 +123,13 @@ public class MapGenerator : MonoBehaviour {
 
 	void FancifyMap () {
 
+		GrowMinerals ();
 		ApplyBiomes ();
 		SetSurface ();
+	}
+
+	void GrowMinerals() {
+		mineralFarm.GrowAll (map, biomesMap);
 	}
 
 	void RandomFillMap() {
@@ -133,11 +139,13 @@ public class MapGenerator : MonoBehaviour {
 		}
 
 		System.Random pseudoRandom = new System.Random(seed.GetHashCode());
-		
+
+		NoiseGenerator gen = new NoiseGenerator ();
+
 		for (int x = 0; x < width; x ++) {
 
-			int groundHeight = PNoise(x, 0, 80, 15, 1);
-			groundHeight += PNoise(x, 0, 50, 30, 1);
+			int groundHeight = (int)gen.PerlinNoise (x, 0, 80, 15, 1);
+			groundHeight += (int)gen.PerlinNoise (x, 0, 50, 30, 1);
 			groundHeight += groundLevel;
 
 			for (int y = 0; y < height; y ++) {
@@ -250,12 +258,13 @@ public class MapGenerator : MonoBehaviour {
 
 	void SetSurface () {
 
-		Queue<Coord> queue = new Queue<Coord> ();
+		Queue<Coord> stoneQueue = new Queue<Coord> ();
 
 		for (int x = 0; x < map.GetLength(0); x ++) {
 			for (int y = 0; y < map.GetLength(1); y ++) {
 				
 				if (IsInMapRange (x, y + 1)) {
+
 					if (map [x, y] == TileType.DIRT && map [x, y + 1] == TileType.NONE) {
 						map [x, y] = TileType.GRASS;
 					}
@@ -268,14 +277,18 @@ public class MapGenerator : MonoBehaviour {
 						else
 							map [x, y] = TileType.STONE_DIRT;
 
-						queue.Enqueue (new Coord (x, y));
+						stoneQueue.Enqueue (new Coord (x, y));
+					}
+
+					if (map[x, y] == TileType.GREYSTONE && map[x, y + 1] == TileType.NONE) {
+						map [x, y] = TileType.GREYSTONE_SAND;
 					}
 				}
 			}
 		}
 
-		while (queue.Count != 0) {
-			Coord tile = queue.Dequeue();
+		while (stoneQueue.Count != 0) {
+			Coord tile = stoneQueue.Dequeue();
 			BiomeType tileBiome = biomesMap[tile.x, tile.y];
 			TileType tileToAdd;
 
@@ -296,7 +309,7 @@ public class MapGenerator : MonoBehaviour {
 
 
 		}
-		
+
 	}
 	
 	void GenerateSquares() {
@@ -353,10 +366,6 @@ public class MapGenerator : MonoBehaviour {
 		}
 		
 		return wallCount;
-	}
-
-	int PNoise (int x, int y, float scale, float mag, float exp){
-		return (int) (Mathf.Pow ((Mathf.PerlinNoise(x / scale, y / scale) * mag), (exp))); 
 	}
 
 	BiomeType GetRandomBiomeType () {

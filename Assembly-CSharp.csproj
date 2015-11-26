@@ -51,8 +51,10 @@
      <Compile Include="Assets\Scripts\GameDefines.cs" />
      <Compile Include="Assets\Scripts\HUDFPS.cs" />
      <Compile Include="Assets\Scripts\MapGenerator.cs" />
+     <Compile Include="Assets\Scripts\MineralFarm.cs" />
      <Compile Include="Assets\Scripts\MobSpawner.cs" />
      <Compile Include="Assets\Scripts\MouseOver.cs" />
+     <Compile Include="Assets\Scripts\NoiseGenerator.cs" />
      <Compile Include="Assets\Scripts\Player.cs" />
      <Compile Include="Assets\Scripts\SquareGenerator.cs" />
      <Compile Include="Assets\Scripts\Teleporter.cs" />

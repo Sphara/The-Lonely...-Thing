@@ -50,7 +50,7 @@ public class SquareGenerator : MonoBehaviour {
 	/// I'm not using start() or awake() because i have to figure out how the script execution order works in unity. This'll be changed to start() once i get used to it
 	/// </summary>
 
-	public void Initialize () {
+	void Start () {
 		tileCollection = new GameObject ();
 		tileCollection.name = "Tiles";
 
@@ -63,6 +63,7 @@ public class SquareGenerator : MonoBehaviour {
 		tilesToGO.Add (TileType.GREYSTONE, GREYSTONE);
 		tilesToGO.Add (TileType.GREYSTONE_RUBY, GREYSTONE_RUBY);
 		tilesToGO.Add (TileType.GREYSTONE_RUBY_ALT, GREYSTONE_RUBY_ALT);
+		tilesToGO.Add (TileType.GREYSTONE_SAND, GREYSTONE_SAND);
 		tilesToGO.Add (TileType.DIRT_SAND, DIRT_SAND);
 		tilesToGO.Add (TileType.DIRT_SNOW, DIRT_SNOW);
 		tilesToGO.Add (TileType.SAND, SAND);
@@ -73,6 +74,7 @@ public class SquareGenerator : MonoBehaviour {
 		tilesToGO.Add (TileType.STONE_COPPER, STONE_COPPER);
 		tilesToGO.Add (TileType.STONE_COPPER_ALT, STONE_COPPER_ALT);
 		tilesToGO.Add (TileType.STONE_DIAMOND, STONE_DIAMOND);
+		tilesToGO.Add (TileType.STONE_DIAMOND_ALT, STONE_DIAMOND_ALT);
 		tilesToGO.Add (TileType.STONE_DIRT, STONE_DIRT);
 		tilesToGO.Add (TileType.STONE_GOLD, STONE_GOLD);
 		tilesToGO.Add (TileType.STONE_GOLD_ALT, STONE_GOLD_ALT);
@@ -110,8 +112,6 @@ public class SquareGenerator : MonoBehaviour {
 	public void GenerateSquares(TileType[,] map) {
 
 		GameObject tile;
-
-		tileCollection.transform.parent = this.transform;
 
 		for (int i = 0; i < map.GetLength(0); i++) {
 			for (int j = 0; j < map.GetLength(1); j++) {

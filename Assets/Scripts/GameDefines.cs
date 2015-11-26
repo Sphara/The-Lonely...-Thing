@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 /// <summary>
 /// A file with some useful structs/enums (First created to avoid duplicating the Coord struct)
@@ -8,7 +9,20 @@ using System.Collections;
 public struct Coord {
 	public int x;
 	public int y;
-	
+
+	public class EqualityComparer : IEqualityComparer<Coord>
+	{
+		public bool Equals(Coord x, Coord y)
+		{
+			return (x.x == y.x && x.y == y.y);
+		}
+
+		public int GetHashCode(Coord x)
+		{
+			return x.x.GetHashCode() ^ x.y.GetHashCode();
+		}
+	}
+
 	public Coord(int _x, int _y) {
 		x = _x;
 		y = _y;
