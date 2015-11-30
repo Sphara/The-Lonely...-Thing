@@ -51,6 +51,8 @@ public class MineralFarm : MonoBehaviour {
 		availableMinerals.Enqueue (new MineralInfo (new List<TileType> () {TileType.STONE_IRON, TileType.STONE_IRON_ALT}, new List<BiomeType> () {BiomeType.STONE, BiomeType.SAND, BiomeType.SNOW}, 82, 0, 100));
 		availableMinerals.Enqueue (new MineralInfo (new List<TileType> () {TileType.STONE_GOLD, TileType.STONE_GOLD_ALT}, new List<BiomeType> () {BiomeType.STONE, BiomeType.SAND, BiomeType.SNOW}, 82, 0, 50));
 		availableMinerals.Enqueue (new MineralInfo (new List<TileType> () {TileType.STONE_DIAMOND, TileType.STONE_DIAMOND_ALT}, new List<BiomeType> () {BiomeType.STONE, BiomeType.SAND, BiomeType.SNOW}, 90, 0, 25));
+		availableMinerals.Enqueue (new MineralInfo (new List<TileType> () {TileType.REDSTONE_EMERALD, TileType.REDSTONE_EMERALD_ALT}, new List<BiomeType> () {BiomeType.REDSTONE}, 65, 0, 100));
+		availableMinerals.Enqueue (new MineralInfo (new List<TileType> () {TileType.DIRT_GRAVEL}, new List<BiomeType> () {BiomeType.DEFAULT}, 70, 0, 100));
 	}
 
 	/// <summary>

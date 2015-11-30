@@ -14,12 +14,18 @@ public class SquareGenerator : MonoBehaviour {
 
 	[Header("Tiles")]
 	public GameObject DIRT;
+	public GameObject DIRT_GRAVEL;
 	public GameObject GRASS;
 	public GameObject GREYSAND;
 	public GameObject GREYSTONE;
 	public GameObject GREYSTONE_RUBY;
 	public GameObject GREYSTONE_RUBY_ALT;
 	public GameObject GREYSTONE_SAND;
+	public GameObject REDSAND;
+	public GameObject REDSTONE;
+	public GameObject REDSTONE_EMERALD;
+	public GameObject REDSTONE_EMERALD_ALT;
+	public GameObject REDSTONE_SAND;
 	public GameObject DIRT_SAND;
 	public GameObject SAND;
 	public GameObject DIRT_SNOW;
@@ -87,7 +93,12 @@ public class SquareGenerator : MonoBehaviour {
 		tilesToGO.Add (TileType.STONE_SNOW, STONE_SNOW);
 		tilesToGO.Add (TileType.LIMITS, LIMITS);
 		tilesToGO.Add (TileType.NONE, EMPTY);
-
+		tilesToGO.Add (TileType.REDSAND, REDSAND);
+		tilesToGO.Add (TileType.REDSTONE, REDSTONE);
+		tilesToGO.Add (TileType.REDSTONE_EMERALD, REDSTONE_EMERALD);
+		tilesToGO.Add (TileType.REDSTONE_EMERALD_ALT, REDSTONE_EMERALD_ALT);
+		tilesToGO.Add (TileType.REDSTONE_SAND, REDSTONE_SAND);
+		tilesToGO.Add (TileType.DIRT_GRAVEL, DIRT_GRAVEL);
 	}
 
 	GameObject getTile (TileType tile) {

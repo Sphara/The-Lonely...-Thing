@@ -33,7 +33,13 @@ public enum TileType {
 	STONE_SILVER_ALT = 26,
 	STONE_GRASS = 27,
 	STONE_DIRT = 28,
-	LIMITS = 29
+	LIMITS = 29,
+	REDSTONE = 30,
+	REDSTONE_SAND = 31,
+	REDSTONE_EMERALD = 32,
+	REDSTONE_EMERALD_ALT = 33,
+	REDSAND = 34,
+	DIRT_GRAVEL = 35
 };
 
 public enum BiomeType {
@@ -42,7 +48,8 @@ public enum BiomeType {
 	SNOW = 2,
 	GREYSTONE = 3,
 	SAND = 4,
-	DEFAULT = 5
+	DEFAULT = 5,
+	REDSTONE = 6
 };
 
 /// <summary>
@@ -192,7 +199,7 @@ public class MapGenerator : MonoBehaviour {
 			int x = UnityEngine.Random.Range (1, map.GetLength(0) - 1);
 			int y = UnityEngine.Random.Range (1, map.GetLength(1) - 1);
 
-			biomesMap[x, y] = GetRandomBiomeType();
+			biomesMap[x, y] = GetBiomeType(x, y);
 			tileList.Add(new Coord(x, y));
 		}
 
@@ -248,6 +255,10 @@ public class MapGenerator : MonoBehaviour {
 					case BiomeType.STONE:
 						map[x, y] = TileType.STONE;
 						break;
+
+					case BiomeType.REDSTONE:
+						map[x, y] = TileType.REDSTONE;
+						break;
 					}
 				}
 
@@ -282,6 +293,10 @@ public class MapGenerator : MonoBehaviour {
 
 					if (map[x, y] == TileType.GREYSTONE && map[x, y + 1] == TileType.NONE) {
 						map [x, y] = TileType.GREYSTONE_SAND;
+					}
+
+					if (map[x, y] == TileType.REDSTONE && map[x, y + 1] == TileType.NONE) {
+						map[x, y] = TileType.REDSTONE_SAND;
 					}
 				}
 			}
@@ -368,9 +383,20 @@ public class MapGenerator : MonoBehaviour {
 		return wallCount;
 	}
 
-	BiomeType GetRandomBiomeType () {
-		Array biomesArray = Enum.GetValues (typeof(BiomeType));
-		return ((BiomeType)biomesArray.GetValue(UnityEngine.Random.Range (1, biomesArray.Length)));
+	BiomeType GetBiomeType (int x, int y) {
+
+		BiomeType biomeRet = BiomeType.NONE;
+
+		if (y >= (groundLevel * 1.1)) {
+			biomeRet = BiomeType.DEFAULT;
+		} else {
+			while (biomeRet == BiomeType.DEFAULT || biomeRet == BiomeType.NONE) {
+				Array biomesArray = Enum.GetValues (typeof(BiomeType));
+				biomeRet = ((BiomeType)biomesArray.GetValue(UnityEngine.Random.Range (1, biomesArray.Length)));
+			}
+		}
+
+		return biomeRet;
 	}
 
 }
