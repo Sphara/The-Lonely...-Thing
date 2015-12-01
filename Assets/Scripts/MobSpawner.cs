@@ -15,7 +15,7 @@ public class MobSpawner : MonoBehaviour {
 	public bool isSpawningMobs = false;
 	
 	/// <summary>
-	/// Sets the stuff.
+	/// Toggle the spawn of mobs
 	/// </summary>
 	/// <param name="stuff">If set to <c>true</c> stuff.</param>
 	public void setSpawn(bool value) {
@@ -32,7 +32,7 @@ public class MobSpawner : MonoBehaviour {
 
 	void Update () {
 
-		if (antNumber == 0) {
+		if (antNumber == 0 && isSpawningMobs) {
 			SpawnAnt();
 		}
 
