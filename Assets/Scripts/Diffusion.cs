@@ -15,7 +15,7 @@ public class Diffusion : MonoBehaviour {
 
 	void Update () {
 		if (tileDiffusionValue > 0f)
-			tileDiffusionValue -= Time.deltaTime * 3;
+			tileDiffusionValue -= Time.deltaTime * 300;
 	}
 	
 	/// <summary>

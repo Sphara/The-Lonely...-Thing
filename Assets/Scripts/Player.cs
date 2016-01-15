@@ -5,30 +5,28 @@ using System.Collections;
 public class Player : MonoBehaviour {
 
 	Controller controller;
-	public float jumpHeight = 4;
-	public float timeToJumpApex = 0.4f;
+	public Characteristics stats;
 
 	float velocityXSmoothing;
 
-	float groundedAcceleration = 0.1f;
-	float airborneAcceleration = 0.3f;
-	float moveSpeed = 6;
 	float gravity;
 	float jumpVelocity;
-	float faceDirection = 1;
+	public float faceDirection = 1;
 	float timeJumpWasCalled = -2f;
 
 	Vector3 velocity;
 	private Transform childTransform;
 	private Animator animator;
 	public SquareGenerator sg;
+	public Shovel shovel;
 	
 	void Start () 
 	{
+		stats = new Characteristics ();
 		controller = GetComponent<Controller> ();
 		animator = GetComponentInChildren<Animator> ();
-		gravity = -(2 * jumpHeight) / Mathf.Pow (timeToJumpApex, 2);
-		jumpVelocity = Mathf.Abs (gravity) * timeToJumpApex;
+		gravity = -(2 * stats.jumpHeight) / Mathf.Pow (stats.timeToJumpApex, 2);
+		jumpVelocity = Mathf.Abs (gravity) * stats.timeToJumpApex;
 
 		foreach (Transform child in transform)
 		{
@@ -53,9 +51,15 @@ public class Player : MonoBehaviour {
 			timeJumpWasCalled = Time.timeSinceLevelLoad;
 		}
 
-		float TargetHorizontalVelocity = input.x * moveSpeed;
+		/* Digging ! */
 
-		velocity.x = Mathf.SmoothDamp(velocity.x, TargetHorizontalVelocity, ref velocityXSmoothing, controller.collisions.below ? groundedAcceleration : airborneAcceleration);
+		if (Input.GetKeyDown (KeyCode.E)) {
+			shovel.dig ();
+		}
+
+		float TargetHorizontalVelocity = input.x * stats.moveSpeed;
+
+		velocity.x = Mathf.SmoothDamp(velocity.x, TargetHorizontalVelocity, ref velocityXSmoothing, controller.collisions.below ? stats.groundedAcceleration : stats.airborneAcceleration);
 		velocity.y += gravity * Time.deltaTime;
 
 		/* Change skin orientation */
@@ -77,7 +81,7 @@ public class Player : MonoBehaviour {
 
 		/* Update diffusion values for pathfinding */
 
-		int diffusionWeight = 10;
+		int diffusionWeight = 50;
 
 		if (sg != null)
 			sg.DiffuseValue((int)Mathf.Round(transform.position.x), (int)Mathf.Round(transform.position.y), diffusionWeight);

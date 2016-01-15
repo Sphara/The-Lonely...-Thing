@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-
 /// <summary>
 /// Test mob. An ant, actually.
 /// </summary>
@@ -10,16 +9,11 @@ using System.Collections;
 public class TestMob : MonoBehaviour {
 
 	Controller controller;
+	public Characteristics stats;
 	SquareGenerator sg;
-	public float jumpHeight = 4;
-	public float timeToJumpApex = 0.4f;
-	float gravity;
 
-	float moveSpeed = 6;
+	float gravity;
 	float velocityXSmoothing;
-	
-	float groundedAcceleration = 0.1f;
-	float airborneAcceleration = 0.3f;
 
 	float jumpVelocity;
 
@@ -29,11 +23,16 @@ public class TestMob : MonoBehaviour {
 	Vector2 direction;
 
 	void Start () {
+		stats = new Characteristics();
 		sg = GameObject.Find ("MapGenerator").GetComponent<SquareGenerator>();
 		controller = GetComponent<Controller> ();
-		gravity = -(2 * jumpHeight) / Mathf.Pow (timeToJumpApex, 2);
+		gravity = -(2 * stats.jumpHeight) / Mathf.Pow (stats.timeToJumpApex, 2);
 		targetDirection = (int)UnityEngine.Random.Range(0, 1) == 0 ? 1 : -1;
-		jumpVelocity = Mathf.Abs (gravity) * timeToJumpApex;
+		jumpVelocity = Mathf.Abs (gravity) * stats.timeToJumpApex;
+	}
+
+	public void TakeHit (GameObject goodGuy) {
+
 	}
 
 	void RandomMovement () {
@@ -78,7 +77,7 @@ public class TestMob : MonoBehaviour {
 			RandomMovement ();
 		}
 
-		velocity.x = Mathf.SmoothDamp(velocity.x, moveSpeed * targetDirection, ref velocityXSmoothing, controller.collisions.below ? groundedAcceleration : airborneAcceleration);
+		velocity.x = Mathf.SmoothDamp(velocity.x, stats.moveSpeed * targetDirection, ref velocityXSmoothing, controller.collisions.below ? stats.groundedAcceleration : stats.airborneAcceleration);
 		velocity.y += gravity * Time.deltaTime;
 
 	}
