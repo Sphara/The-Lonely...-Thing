@@ -1,37 +1,41 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class CollisionController : Controller {
 
 	protected float maxSlopeAngle = 70;
+	protected Dictionary<int, CollisionEventFunction> CollisionHandleDic;
 
-	protected override void DispatchVerticalCollision(RaycastHit2D hit, ref Vector3 velocity, ref float YDirection, ref float rayLength) {
+	void Start () {
+		CollisionEventFunction obstacle = ObstacleCollision;
+		CollisionEventFunction enemy = EnemyCollision;
+		CollisionEventFunction buff = BuffCollision;
+		CollisionEventFunction player = PlayerCollision;
 
-		switch (hit.transform.gameObject.layer) { // I don't like switches
-		case 9: // CollisionLayer
-			velocity.y = (hit.distance - skinWidth) * YDirection;
+		CollisionHandleDic = new Dictionary<int, CollisionEventFunction> ();
+		CollisionHandleDic.Add (LayerMask.NameToLayer("CollisionLayer"), obstacle);
+		CollisionHandleDic.Add (LayerMask.NameToLayer("EnemyLayer"), enemy);
+		CollisionHandleDic.Add (LayerMask.NameToLayer("BuffLayer"), buff);
+		CollisionHandleDic.Add (LayerMask.NameToLayer("P-layer"), player);
+
+		boxCollider = GetComponent<BoxCollider2D> ();
+		CalculateRaySpacing ();
+	}
+
+	protected virtual void ObstacleCollision(RaycastHit2D hit, ref Vector3 velocity, ref float Direction, ref float rayLength, bool isVertical) {
+
+		if (isVertical) {
+			velocity.y = (hit.distance - skinWidth) * Direction;
 			rayLength = hit.distance;
 
 			if (collisions.climbingASlope) {
-				velocity.x = velocity.y / Mathf.Tan (collisions.slopeAngle * Mathf.Deg2Rad) * Mathf.Sign(velocity.x);
+				velocity.x = velocity.y / Mathf.Tan (collisions.slopeAngle * Mathf.Deg2Rad) * Mathf.Sign (velocity.x);
 			}
 
-			collisions.above = YDirection == 1;
-			collisions.below = YDirection == -1;
-			break;
-		case 10:
-			break;
-		default:
-			Debug.Log (this.name + " collided with " + hit.transform.gameObject.name + " from layer " + hit.transform.gameObject.layer + " and failed to react");
-			break;
-		}
-
-	}
-
-	protected override void DispatchHorizontalCollision(RaycastHit2D hit, ref Vector3 velocity, ref float XDirection, ref float rayLength, int i) {
-
-		switch (hit.transform.gameObject.layer) { // I don't like switches
-		case 9: // CollisionLayer
+			collisions.above = Direction == 1;
+			collisions.below = Direction == -1;
+		} else {
 			float slopeAngle = Vector2.Angle(hit.normal, Vector2.up);
 
 			if (i == 0 && slopeAngle <= maxSlopeAngle) {
@@ -39,89 +43,47 @@ public class CollisionController : Controller {
 
 				if (slopeAngle != collisions.slopeAngleOld) {
 					distanceToSlope = hit.distance - skinWidth;
-					velocity.x -= distanceToSlope * XDirection;
+					velocity.x -= distanceToSlope * Direction;
 				}
 
 				ClimbSlope (ref velocity, slopeAngle);
-				velocity.x += distanceToSlope * XDirection;
+				velocity.x += distanceToSlope * Direction;
 
 			}
 
 			if (!collisions.climbingASlope || slopeAngle > maxSlopeAngle) {
-				velocity.x = (hit.distance - skinWidth) * XDirection;
+				velocity.x = (hit.distance - skinWidth) * Direction;
 				rayLength = hit.distance;
 
 				if (collisions.climbingASlope) {
 					velocity.y = Mathf.Tan(collisions.slopeAngle * Mathf.Deg2Rad) * Mathf.Abs (velocity.x);
 				}
 
-				collisions.left = XDirection == -1;
-				collisions.right = XDirection == 1;
+				collisions.left = Direction == -1;
+				collisions.right = Direction == 1;
 			}
-			break;
-		case 10:
-			break;
-		default:
-			Debug.Log (this.name + " collided with " + hit.transform.gameObject.name + " from layer " + hit.transform.gameObject.layer + " and failed to react");
-			break;
 		}
+	}
+
+	protected virtual void EnemyCollision(RaycastHit2D hit, ref Vector3 velocity, ref float Direction, ref float rayLength, bool isVertical) {
 
 	}
 
-	protected override void VerticalCollision (ref Vector3 velocity) {
-		float YDirection = Mathf.Sign (velocity.y);
-		float rayLength = Mathf.Abs (velocity.y) + skinWidth;
-
-		for (int i = 0; i < verticalRayCount; i++) {
-			Vector2 rayOrigin = (YDirection == -1) ? raycastOrigins.bottomLeft : raycastOrigins.topLeft;
-			rayOrigin += Vector2.right * (verticalRaySpacing * i + velocity.x);
-
-			RaycastHit2D hit = Physics2D.Raycast(rayOrigin, Vector2.up * YDirection, rayLength, collisionMask);
-
-			Debug.DrawRay(rayOrigin, Vector2.up * YDirection * rayLength, Color.red);
-
-			if (hit) {
-				DispatchVerticalCollision (hit, ref velocity, ref YDirection, ref rayLength);
-			}
-
-		}
-
-		if (collisions.climbingASlope) {
-			float XDirection = Mathf.Sign(velocity.x);
-			rayLength = Mathf.Abs(velocity.x) + skinWidth;
-			Vector2 rayOrigin = ((XDirection == -1) ? raycastOrigins.bottomLeft : raycastOrigins.bottomRight) + Vector2.up * velocity.y;
-
-			RaycastHit2D hit = Physics2D.Raycast(rayOrigin, Vector2.right * XDirection, rayLength, collisionMask);
-
-			if (hit) {
-				float slopeAngle = Vector2.Angle(hit.normal, Vector2.up);
-
-				if (slopeAngle != collisions.slopeAngle) {
-					velocity.x = (hit.distance - skinWidth) * XDirection;
-					collisions.slopeAngle = slopeAngle;
-				}
-
-			}
-		}
+	protected virtual void BuffCollision(RaycastHit2D hit, ref Vector3 velocity, ref float Direction, ref float rayLength, bool isVertical) {
 
 	}
 
-	protected override void HorizontalCollision (ref Vector3 velocity) {
-		float XDirection = Mathf.Sign (velocity.x);
-		float rayLength = Mathf.Abs (velocity.x) + skinWidth;
+	protected virtual void PlayerCollision(RaycastHit2D hit, ref Vector3 velocity, ref float Direction, ref float rayLength, bool isVertical) {
 
-		for (int i = 0; i < horizontalRayCount; i++) {
-			Vector2 rayOrigin = (XDirection == -1) ? raycastOrigins.bottomLeft : raycastOrigins.bottomRight;
-			rayOrigin += Vector2.up * (horizontalRaySpacing * i);
+	}
 
-			RaycastHit2D hit = Physics2D.Raycast(rayOrigin, Vector2.right * XDirection, rayLength, collisionMask);
+	protected override void DispatchVerticalCollision(RaycastHit2D hit, ref Vector3 velocity, ref float YDirection, ref float rayLength) {
+		CollisionHandleDic [hit.transform.gameObject.layer] (hit, ref velocity, ref YDirection, ref rayLength, true);
+	}
 
-			Debug.DrawRay(rayOrigin, Vector2.right * XDirection * rayLength, Color.red);
+	protected override void DispatchHorizontalCollision(RaycastHit2D hit, ref Vector3 velocity, ref float XDirection, ref float rayLength, int i) {
+		CollisionHandleDic [hit.transform.gameObject.layer] (hit, ref velocity, ref XDirection, ref rayLength, false);
 
-			if (hit)
-				DispatchHorizontalCollision (hit, ref velocity, ref XDirection, ref rayLength, i);
-
-		}
 	}
 
 	protected virtual void ClimbSlope (ref Vector3 velocity, float slopeAngle) {

@@ -2,6 +2,7 @@
 using System.Collections;
 
 public class GeneralMobController : CollisionController {
+
 	protected override void DispatchVerticalCollision(RaycastHit2D hit, ref Vector3 velocity, ref float YDirection, ref float rayLength) {
 
 		switch (hit.transform.gameObject.layer) { // I don't like switches

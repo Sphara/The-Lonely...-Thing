@@ -8,8 +8,9 @@ using System.Collections;
 [RequireComponent(typeof(BoxCollider2D))]
 public class Controller : MonoBehaviour {
 
-	protected BoxCollider2D boxCollider;
+	public delegate void CollisionEventFunction (RaycastHit2D hit, ref Vector3 velocity, ref float Direction, ref float length, bool isVertical);
 
+	protected BoxCollider2D boxCollider;
 	public LayerMask collisionMask;
 
 	protected const float skinWidth = 0.002f;
@@ -21,8 +22,13 @@ public class Controller : MonoBehaviour {
 
 	public RaycastOrigins raycastOrigins;
 	public CollisionsInfo collisions;
-	
+
+	protected int i;
+
 	void Start() {
+
+		Debug.Log ("LOADING BOXCOLLIDER");
+
 		boxCollider = GetComponent<BoxCollider2D> ();
 		CalculateRaySpacing ();
 		
@@ -49,7 +55,7 @@ public class Controller : MonoBehaviour {
 		float YDirection = Mathf.Sign (velocity.y);
 		float rayLength = Mathf.Abs (velocity.y) + skinWidth;
 
-		for (int i = 0; i < verticalRayCount; i++) {
+		for (i = 0; i < verticalRayCount; i++) {
 			Vector2 rayOrigin = (YDirection == -1) ? raycastOrigins.bottomLeft : raycastOrigins.topLeft;
 			rayOrigin += Vector2.right * (verticalRaySpacing * i + velocity.x);
 
@@ -73,7 +79,7 @@ public class Controller : MonoBehaviour {
 		float XDirection = Mathf.Sign (velocity.x);
 		float rayLength = Mathf.Abs (velocity.x) + skinWidth;
 		
-		for (int i = 0; i < horizontalRayCount; i++) {
+		for (i = 0; i < horizontalRayCount; i++) {
 			Vector2 rayOrigin = (XDirection == -1) ? raycastOrigins.bottomLeft : raycastOrigins.bottomRight;
 			rayOrigin += Vector2.up * (horizontalRaySpacing * i);
 			
@@ -98,7 +104,7 @@ public class Controller : MonoBehaviour {
 
 		RaycastHit2D hit = new RaycastHit2D();
 
-		for (int i = 0; i < horizontalRayCount; i++) {
+		for (i = 0; i < horizontalRayCount; i++) {
 			Vector2 rayOrigin = (direction == -1) ? raycastOrigins.bottomLeft : raycastOrigins.bottomRight;
 			rayOrigin += Vector2.up * (horizontalRaySpacing * i);
 
@@ -117,7 +123,7 @@ public class Controller : MonoBehaviour {
 
 		RaycastHit2D hit = new RaycastHit2D();
 
-		for (int i = 0; i < verticalRayCount; i++) {
+		for (i = 0; i < verticalRayCount; i++) {
 			Vector2 rayOrigin = (direction == -1) ? raycastOrigins.bottomLeft : raycastOrigins.topLeft;
 			rayOrigin += Vector2.right * (verticalRaySpacing * i);
 

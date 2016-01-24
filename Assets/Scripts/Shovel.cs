@@ -33,8 +33,13 @@ public class Shovel : MonoBehaviour {
 		}
 
 		if (hit = controller.ManualRayCast (layer, dir, axisToDig, 1.0f)) {
-			if (hit.transform.gameObject.layer == LayerMask.NameToLayer("CollisionLayer"))
-				hit.transform.GetComponent<MouseOver> ().DestroyTile ();
+			if (hit.transform.gameObject.layer == LayerMask.NameToLayer ("CollisionLayer")) {
+
+				MouseOver mo = hit.transform.GetComponent<MouseOver> ();
+				if (mo)
+					mo.DestroyTile ();
+			
+			}
 		}
 	}
 }
