@@ -35,6 +35,7 @@ public class CollisionController : Controller {
 
 			collisions.above = Direction == 1;
 			collisions.below = Direction == -1;
+
 		} else {
 			float slopeAngle = Vector2.Angle(hit.normal, Vector2.up);
 
@@ -84,6 +85,42 @@ public class CollisionController : Controller {
 	protected override void DispatchHorizontalCollision(RaycastHit2D hit, ref Vector3 velocity, ref float XDirection, ref float rayLength, int i) {
 		CollisionHandleDic [hit.transform.gameObject.layer] (hit, ref velocity, ref XDirection, ref rayLength, false);
 
+	}
+
+	protected override void VerticalCollision (ref Vector3 velocity) {
+		float YDirection = Mathf.Sign (velocity.y);
+		float rayLength = Mathf.Abs (velocity.y) + skinWidth;
+
+		for (i = 0; i < verticalRayCount; i++) {
+			Vector2 rayOrigin = (YDirection == -1) ? raycastOrigins.bottomLeft : raycastOrigins.topLeft;
+			rayOrigin += Vector2.right * (verticalRaySpacing * i + velocity.x);
+
+			RaycastHit2D hit = Physics2D.Raycast(rayOrigin, Vector2.up * YDirection, rayLength, collisionMask);
+
+			Debug.DrawRay(rayOrigin, Vector2.up * YDirection * rayLength, Color.red);
+
+			if (hit) {
+				DispatchVerticalCollision (hit, ref velocity, ref YDirection, ref rayLength);
+			}
+
+		}
+			
+		if (collisions.climbingASlope) {
+			float directionX = Mathf.Sign(velocity.x);
+			rayLength = Mathf.Abs(velocity.x) + skinWidth;
+			Vector2 rayOrigin = ((directionX == -1) ? raycastOrigins.bottomLeft : raycastOrigins.bottomRight) + Vector2.up * velocity.y;
+			RaycastHit2D newHit = Physics2D.Raycast(rayOrigin, Vector2.right * directionX, rayLength, collisionMask);
+			Debug.DrawRay (rayOrigin, Vector2.right * directionX * rayLength, Color.blue);
+
+			if (newHit) {
+				float slopeAngle = Vector2.Angle(newHit.normal, Vector2.up);
+
+				if (slopeAngle != collisions.slopeAngle) {
+					velocity.x = (newHit.distance - skinWidth) * directionX;
+					collisions.slopeAngle = slopeAngle;
+				}
+			}
+		}
 	}
 
 	protected virtual void ClimbSlope (ref Vector3 velocity, float slopeAngle) {

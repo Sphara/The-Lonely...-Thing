@@ -26,9 +26,6 @@ public class Controller : MonoBehaviour {
 	protected int i;
 
 	void Start() {
-
-		Debug.Log ("LOADING BOXCOLLIDER");
-
 		boxCollider = GetComponent<BoxCollider2D> ();
 		CalculateRaySpacing ();
 		
