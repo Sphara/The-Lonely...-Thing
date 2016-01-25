@@ -32,11 +32,13 @@ public struct Coord {
 public struct CollisionsInfo {
 	public bool above, below, left, right;
 	public bool climbingASlope;
+	public bool descendingASlope;
 	public float slopeAngle, slopeAngleOld;
-	
+	public Vector3 oldVelocity;
+
 	public void Reset () {
 		above = below = left = right = false;
-		climbingASlope = false;
+		climbingASlope = descendingASlope = false;
 		slopeAngleOld = slopeAngle;
 		slopeAngle = 0;
 	}
