@@ -222,6 +222,16 @@ public class SquareGenerator : MonoBehaviour {
 			ds.DiffuseValue (value, Vector2.zero);
 	}
 
+	public void DisableSquare(int x, int y) {
+		Coord coord = new Coord(x, y);
+		Diffusion ds;
+
+		_map.TryGetValue (coord, out ds);
+
+		if (ds)
+			ds.VoidSquare();
+	}
+
 
 	/// <summary>
 	/// Reset the map

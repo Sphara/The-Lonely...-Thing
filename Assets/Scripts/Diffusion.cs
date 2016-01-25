@@ -43,6 +43,10 @@ public class Diffusion : MonoBehaviour {
 
 	}
 
+	public void VoidSquare () {
+		tileDiffusionValue = 0f;
+	}
+
 	/// <summary>
 	/// Gets the direction.
 	/// TODO: add a parameter to get the direction to a particular entity

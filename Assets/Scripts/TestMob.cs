@@ -31,10 +31,6 @@ public class TestMob : MonoBehaviour {
 		jumpVelocity = Mathf.Abs (gravity) * stats.timeToJumpApex;
 	}
 
-	public void TakeHit (GameObject goodGuy) {
-
-	}
-
 	void RandomMovement () {
 		if (controller.collisions.left && controller.collisions.below)
 			targetDirection = 1;
@@ -68,6 +64,8 @@ public class TestMob : MonoBehaviour {
 
 	void Update () {
 	
+		Vector3 newScale = transform.localScale;
+
 		if (controller.collisions.above || controller.collisions.below)
 			velocity.y = 0;
 
@@ -80,6 +78,11 @@ public class TestMob : MonoBehaviour {
 		velocity.x = Mathf.SmoothDamp(velocity.x, stats.moveSpeed * targetDirection, ref velocityXSmoothing, controller.collisions.below ? stats.groundedAcceleration : stats.airborneAcceleration);
 		velocity.y += gravity * Time.deltaTime;
 
+		newScale.x = -targetDirection;
+		transform.localScale = newScale;
+
+		if (sg)
+			sg.DisableSquare ((int)Mathf.Round(transform.position.x), (int)Mathf.Round(transform.position.y));
 	}
 
 	void FixedUpdate ()
