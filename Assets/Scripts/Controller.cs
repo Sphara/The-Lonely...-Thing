@@ -3,6 +3,8 @@ using System.Collections;
 
 /// <summary>
 ///  Controller originally made by Sebastian Lague (https://www.youtube.com/watch?v=MbWK8bCAU2w) tweaked a bit
+/// 
+/// It's a base for all moving objects
 /// </summary>
 
 [RequireComponent(typeof(BoxCollider2D))]
@@ -25,13 +27,12 @@ public class Controller : MonoBehaviour {
 
 	protected int i;
 
-	void Start() {
+	public virtual void Start() {
 		boxCollider = GetComponent<BoxCollider2D> ();
 		CalculateRaySpacing ();
-		
 	}
 
-	public virtual void Move (Vector3 velocity) {
+	public virtual void Move (Vector3 velocity, bool standingOnPlatform = false) {
 		UpdateRaycastOrigins ();
 		collisions.Reset ();
 
@@ -84,9 +85,14 @@ public class Controller : MonoBehaviour {
 
 			Debug.DrawRay(rayOrigin, Vector2.right * XDirection * rayLength, Color.red);
 
-			if (hit)
+			if (hit) {
+
+				if (hit.distance == 0) {
+					continue;
+				}
+
 				DispatchHorizontalCollision (hit, ref velocity, ref XDirection, ref rayLength, i);
-			
+			}
 		}
 	}
 

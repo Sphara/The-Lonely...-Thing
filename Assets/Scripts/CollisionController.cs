@@ -2,6 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 
+
+/// <summary>
+/// A controller for basic moving objects like the player & the mobs. Supports slope climbing & collisions with stuff
+/// </summary>
 public class CollisionController : Controller {
 
 	protected float maxSlopeAngle = 70;
@@ -9,7 +13,9 @@ public class CollisionController : Controller {
 
 	protected Dictionary<int, CollisionEventFunction> CollisionHandleDic;
 
-	void Start () {
+	public override void Start () {
+		base.Start ();
+
 		CollisionEventFunction obstacle = ObstacleCollision;
 		CollisionEventFunction enemy = EnemyCollision;
 		CollisionEventFunction buff = BuffCollision;
@@ -20,12 +26,9 @@ public class CollisionController : Controller {
 		CollisionHandleDic.Add (LayerMask.NameToLayer("EnemyLayer"), enemy);
 		CollisionHandleDic.Add (LayerMask.NameToLayer("BuffLayer"), buff);
 		CollisionHandleDic.Add (LayerMask.NameToLayer("P-layer"), player);
-
-		boxCollider = GetComponent<BoxCollider2D> ();
-		CalculateRaySpacing ();
 	}
 
-	public override void Move (Vector3 velocity) {
+	public override void Move (Vector3 velocity, bool standingOnPlatform = false) {
 		UpdateRaycastOrigins ();
 		collisions.Reset ();
 		collisions.oldVelocity = velocity;
@@ -41,6 +44,10 @@ public class CollisionController : Controller {
 			VerticalCollision (ref velocity);
 
 		transform.Translate (velocity);
+
+		if (standingOnPlatform) {
+			collisions.below = true;
+		}
 	}
 
 	protected virtual void ObstacleCollision(RaycastHit2D hit, ref Vector3 velocity, ref float Direction, ref float rayLength, bool isVertical) {

@@ -1,6 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// A Shovel. Shovels stuff, using the controller attached to the object. I'll have to change it to be a bit more general & to work on all destructible objects, not only terrain
+/// </summary>
+
 [RequireComponent(typeof(Controller))]
 [RequireComponent(typeof(Player))]
 public class Shovel : MonoBehaviour {
@@ -8,12 +12,10 @@ public class Shovel : MonoBehaviour {
 	Controller controller;
 	Player player;
 	int axisToDig = 0; // 0 for horizontal dig
-	int layer;
 
 	void Start () {
 		controller = GetComponent<Controller> ();
 		player = GetComponent<Player> ();
-		layer = 1 << 9;
 	}
 
 	public void dig () {
@@ -32,14 +34,11 @@ public class Shovel : MonoBehaviour {
 			}
 		}
 
-		if (hit = controller.ManualRayCast (layer, dir, axisToDig, 1.0f)) {
-			if (hit.transform.gameObject.layer == LayerMask.NameToLayer ("CollisionLayer")) {
+		if (hit = controller.ManualRayCast (LayerMask.NameToLayer ("CollisionLayer"), dir, axisToDig, 1.0f)) {
 
-				MouseOver mo = hit.transform.GetComponent<MouseOver> ();
-				if (mo)
-					mo.DestroyTile ();
-			
-			}
+			MouseOver mo = hit.transform.GetComponent<MouseOver> ();
+			if (mo)
+				mo.DestroyTile ();
 		}
 	}
 }

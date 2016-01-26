@@ -58,6 +58,7 @@
      <Compile Include="Assets\Scripts\MobSpawner.cs" />
      <Compile Include="Assets\Scripts\MouseOver.cs" />
      <Compile Include="Assets\Scripts\NoiseGenerator.cs" />
+     <Compile Include="Assets\Scripts\PlatformController.cs" />
      <Compile Include="Assets\Scripts\Player.cs" />
      <Compile Include="Assets\Scripts\Shovel.cs" />
      <Compile Include="Assets\Scripts\SquareGenerator.cs" />
