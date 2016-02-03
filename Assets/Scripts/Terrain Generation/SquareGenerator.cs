@@ -49,12 +49,10 @@ public class SquareGenerator : MonoBehaviour {
 	public GameObject STONE_DIRT;
 	public GameObject LIMITS;
 	public GameObject EMPTY;
-
-	/// <summary>
-	/// Initialize this instance.
-	/// 
-	/// I'm not using start() or awake() because i have to figure out how the script execution order works in unity. This'll be changed to start() once i get used to it
-	/// </summary>
+	public GameObject GROWNGRASS_1;
+	public GameObject GROWNGRASS_2;
+	public GameObject GROWNGRASS_3;
+	public GameObject GROWNGRASS_4;
 
 	void Start () {
 		tileCollection = new GameObject ();
@@ -99,6 +97,11 @@ public class SquareGenerator : MonoBehaviour {
 		tilesToGO.Add (TileType.REDSTONE_EMERALD_ALT, REDSTONE_EMERALD_ALT);
 		tilesToGO.Add (TileType.REDSTONE_SAND, REDSTONE_SAND);
 		tilesToGO.Add (TileType.DIRT_GRAVEL, DIRT_GRAVEL);
+		tilesToGO.Add (TileType.GROW_GRASS_1, GROWNGRASS_1);
+		tilesToGO.Add (TileType.GROW_GRASS_2, GROWNGRASS_2);
+		tilesToGO.Add (TileType.GROW_GRASS_3, GROWNGRASS_3);
+		tilesToGO.Add (TileType.GROW_GRASS_4, GROWNGRASS_4);
+
 	}
 
 	GameObject getTile (TileType tile) {

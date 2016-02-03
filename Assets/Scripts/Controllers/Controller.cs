@@ -111,7 +111,7 @@ public class Controller : MonoBehaviour {
 			Vector2 rayOrigin = (direction == -1) ? raycastOrigins.bottomLeft : raycastOrigins.bottomRight;
 			rayOrigin += Vector2.up * (horizontalRaySpacing * i);
 
-			 hit = Physics2D.Raycast(rayOrigin, Vector2.right * direction, length, collisionMask);
+			hit = Physics2D.Raycast(rayOrigin, Vector2.right * direction, length, hitLayer);
 
 			Debug.DrawRay(rayOrigin, Vector2.right * direction * length, Color.green);
 
@@ -130,7 +130,7 @@ public class Controller : MonoBehaviour {
 			Vector2 rayOrigin = (direction == -1) ? raycastOrigins.bottomLeft : raycastOrigins.topLeft;
 			rayOrigin += Vector2.right * (verticalRaySpacing * i);
 
-			hit = Physics2D.Raycast(rayOrigin, Vector2.up * direction, length, collisionMask);
+			hit = Physics2D.Raycast(rayOrigin, Vector2.up * direction, length, hitLayer);
 
 			Debug.DrawRay(rayOrigin, Vector2.up * direction * length, Color.green);
 

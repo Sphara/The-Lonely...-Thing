@@ -13,6 +13,8 @@ public class Shovel : MonoBehaviour {
 	Player player;
 	int axisToDig = 0; // 0 for horizontal dig
 
+	public LayerMask layerToDig;
+
 	void Start () {
 		controller = GetComponent<Controller> ();
 		player = GetComponent<Player> ();
@@ -34,7 +36,7 @@ public class Shovel : MonoBehaviour {
 			}
 		}
 
-		if (hit = controller.ManualRayCast (LayerMask.NameToLayer ("CollisionLayer"), dir, axisToDig, 1.0f)) {
+		if (hit = controller.ManualRayCast (layerToDig, dir, axisToDig, 1.0f)) {
 
 			MouseOver mo = hit.transform.GetComponent<MouseOver> ();
 			if (mo)

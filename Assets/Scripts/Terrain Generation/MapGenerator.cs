@@ -39,7 +39,11 @@ public enum TileType {
 	REDSTONE_EMERALD = 32,
 	REDSTONE_EMERALD_ALT = 33,
 	REDSAND = 34,
-	DIRT_GRAVEL = 35
+	DIRT_GRAVEL = 35,
+	GROW_GRASS_1 = 36,
+	GROW_GRASS_2 = 37,
+	GROW_GRASS_3 = 38,
+	GROW_GRASS_4 = 39
 };
 
 public enum BiomeType {
@@ -95,9 +99,16 @@ public class MapGenerator : MonoBehaviour {
 	public MobSpawner mobSpawner;
 	public GameObject player;
 	public MineralFarm mineralFarm;
+
+	List<TileType> grassList = new List<TileType> ();
 	
 	void Start() {
 		squareGenerator = GetComponent<SquareGenerator> ();
+		grassList.Add (TileType.GROW_GRASS_1);
+		grassList.Add (TileType.GROW_GRASS_2);
+		grassList.Add (TileType.GROW_GRASS_3);
+		grassList.Add (TileType.GROW_GRASS_4);
+
 		GenerateMap();
 		teleporter.TeleportPlayerInSquareMap (player);
 		mobSpawner.setSpawn (true);
@@ -158,7 +169,7 @@ public class MapGenerator : MonoBehaviour {
 			for (int y = 0; y < height; y ++) {
 
 				if (y < (groundHeight - crustHeight)) {
-					map[x,y] = (pseudoRandom.Next(0,100) < randomFillPercent) ? TileType.DIRT : TileType.NONE;
+					map[x,y] = (pseudoRandom.Next(0, 100) < randomFillPercent) ? TileType.DIRT : TileType.NONE;
 				} else if (y < groundHeight) {
 					map[x, y] = TileType.DIRT;
 				} else {
@@ -270,6 +281,7 @@ public class MapGenerator : MonoBehaviour {
 	void SetSurface () {
 
 		Queue<Coord> stoneQueue = new Queue<Coord> ();
+		Queue<Coord> grassQueue = new Queue<Coord> ();
 
 		for (int x = 0; x < map.GetLength(0); x ++) {
 			for (int y = 0; y < map.GetLength(1); y ++) {
@@ -278,6 +290,7 @@ public class MapGenerator : MonoBehaviour {
 
 					if (map [x, y] == TileType.DIRT && map [x, y + 1] == TileType.NONE) {
 						map [x, y] = TileType.GRASS;
+						grassQueue.Enqueue (new Coord(x, y));
 					}
 
 					if (map [x, y] == TileType.STONE && map [x, y + 1] == TileType.NONE) {
@@ -302,6 +315,7 @@ public class MapGenerator : MonoBehaviour {
 			}
 		}
 
+		/* Sets the surface of the stone biomes */
 		while (stoneQueue.Count != 0) {
 			Coord tile = stoneQueue.Dequeue();
 			BiomeType tileBiome = biomesMap[tile.x, tile.y];
@@ -319,9 +333,19 @@ public class MapGenerator : MonoBehaviour {
 
 				if (tileToAdd == TileType.DIRT && tile.y + 2 < height - 1 && map[tile.x, tile.y + 2] == TileType.NONE) {
 					map[tile.x, tile.y + 1] = TileType.GRASS;
+					grassQueue.Enqueue (new Coord(tile.x, tile.y + 1));
 				}
 			}
+		}
+			
+		/* Grow grass */
+		while (grassQueue.Count != 0) {
 
+			Coord tile = grassQueue.Dequeue ();
+
+			if (IsInMapRange (tile.x, tile.y + 1) && map[tile.x, tile.y + 1] == TileType.NONE) {
+				map [tile.x, tile.y + 1] = grassList[UnityEngine.Random.Range (0, grassList.Count)];
+			}
 
 		}
 
@@ -333,7 +357,7 @@ public class MapGenerator : MonoBehaviour {
 	}
 	
 	void UpdateBorderedMap ()	{
-		borderedMap = new TileType[width + borderSize * 2,height + borderSize * 2];
+		borderedMap = new TileType[width + borderSize * 2, height + borderSize * 2];
 
 		for (int x = 0; x < borderedMap.GetLength(0); x ++) {
 			for (int y = 0; y < borderedMap.GetLength(1); y ++) {
@@ -398,5 +422,5 @@ public class MapGenerator : MonoBehaviour {
 
 		return biomeRet;
 	}
-
+		
 }

@@ -16,18 +16,11 @@ public class PlatformController : Controller {
 
 	public override void Start () {
 		base.Start ();
-
-		movement = new Vector3 (0, 1, 0);
 	}
 
-	void Update () {
+	protected virtual void Update () {
 
 		UpdateRaycastOrigins ();
-
-		if (transform.position.y > 15)
-			movement.y = -1;
-		if (transform.position.y < 0)
-			movement.y = 1;
 
 		Vector3 velocity = movement * Time.deltaTime;
 
