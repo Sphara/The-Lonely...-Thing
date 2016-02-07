@@ -90,6 +90,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14fbac4c65776ef4abbec4ad324ae997, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isLinkable: 1
+  xLinked: 0
+  yLinked: -1
 --- !u!114 &11480208
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -119,6 +122,14 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: m_Layer
       value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: yLinked
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: isLinkable
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

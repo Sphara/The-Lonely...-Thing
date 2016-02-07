@@ -9,8 +9,10 @@ using System.Collections.Generic;
 public class SquareGenerator : MonoBehaviour {
 
 	GameObject tileCollection;
+	Dictionary<Coord, GameObject> tileMap;
 	Dictionary<TileType, GameObject> tilesToGO;
-	Dictionary<Coord, Diffusion> _map;
+	Dictionary<Coord, Diffusion> AIMap;
+	Queue<MouseOver> linkables;
 
 	[Header("Tiles")]
 	public GameObject DIRT;
@@ -58,9 +60,11 @@ public class SquareGenerator : MonoBehaviour {
 		tileCollection = new GameObject ();
 		tileCollection.name = "Tiles";
 
-		_map = new Dictionary<Coord, Diffusion> ();
+		AIMap = new Dictionary<Coord, Diffusion> ();
 		tilesToGO = new Dictionary<TileType, GameObject> ();
-		
+		linkables = new Queue<MouseOver> ();
+		tileMap = new Dictionary<Coord, GameObject> ();
+
 		tilesToGO.Add (TileType.DIRT, DIRT);
 		tilesToGO.Add (TileType.GRASS, GRASS);
 		tilesToGO.Add (TileType.GREYSAND, GREYSAND);
@@ -133,17 +137,40 @@ public class SquareGenerator : MonoBehaviour {
 				tile = (GameObject)Instantiate(getTile(map[i, j]), new Vector3(i, j, 0), Quaternion.identity);
 				tile.name = "Tile[" + i + "][" + j + "]";
 				tile.transform.parent = tileCollection.transform;
+				tileMap.Add (new Coord(i, j), tile);
 
 				if (map[i, j] == TileType.NONE)
-					_map.Add(new Coord(i, j), tile.GetComponent<Diffusion>());
+					AIMap.Add(new Coord(i, j), tile.GetComponent<Diffusion>());
+
+				MouseOver m = tile.GetComponent<MouseOver> ();
+				if (m && m.isLinkable) {
+					linkables.Enqueue (m);
+				}
 
 			}
 		}
 
-		foreach (KeyValuePair<Coord, Diffusion> kvp in _map) {
+		foreach (KeyValuePair<Coord, Diffusion> kvp in AIMap) {
 			AttachNeighbours(kvp.Key.x, kvp.Key.y);
 		}
 
+		LinkLinkables ();
+	}
+
+	/// <summary>
+	/// Links the linkables tiles to be able to destroy multiple codependant tiles in one dig.
+	/// </summary>
+
+	public void LinkLinkables () {
+
+		while (linkables.Count != 0) {
+
+			MouseOver m = linkables.Dequeue();
+			MouseOver o = tileMap [new Coord ((int)m.transform.position.x + m.xLinked, (int)m.transform.position.y + m.yLinked)].GetComponent<MouseOver> ();
+
+			if (o)
+				o.LinkTile (m);
+		}
 	}
 
 	/// <summary>
@@ -156,7 +183,7 @@ public class SquareGenerator : MonoBehaviour {
 		Diffusion ds;
 		Coord coord = new Coord (x, y);
 
-		_map.TryGetValue (coord, out ds);
+		AIMap.TryGetValue (coord, out ds);
 		
 		if (ds)
 			return;
@@ -164,7 +191,7 @@ public class SquareGenerator : MonoBehaviour {
 		GameObject tile = (GameObject)Instantiate(getTile(TileType.NONE), new Vector3(x, y, 0), Quaternion.identity);
 		tile.name = "Tile[" + x + "][" + y + "]";
 		tile.transform.parent = tileCollection.transform;
-		_map.Add (coord, tile.GetComponent<Diffusion>());
+		AIMap.Add (coord, tile.GetComponent<Diffusion>());
 		AttachNeighbours (x, y);
 		AttachNeighbours (x + 1, y);
 		AttachNeighbours (x, y + 1);
@@ -180,15 +207,15 @@ public class SquareGenerator : MonoBehaviour {
 
 		Diffusion ds;
 
-		_map.TryGetValue(new Coord(x, y), out ds);
+		AIMap.TryGetValue(new Coord(x, y), out ds);
 
 		if (!ds)
 			return;
 
-		_map.TryGetValue(new Coord(x + 1, y), out right);
-		_map.TryGetValue(new Coord(x - 1, y), out left);
-		_map.TryGetValue(new Coord(x, y + 1), out up);
-		_map.TryGetValue(new Coord(x, y - 1), out down);
+		AIMap.TryGetValue(new Coord(x + 1, y), out right);
+		AIMap.TryGetValue(new Coord(x - 1, y), out left);
+		AIMap.TryGetValue(new Coord(x, y + 1), out up);
+		AIMap.TryGetValue(new Coord(x, y - 1), out down);
 
 		ds.neighbours.setNeighbouhrs(up, down, left, right);
 	}
@@ -203,7 +230,7 @@ public class SquareGenerator : MonoBehaviour {
 		Coord coord = new Coord (x, y);
 		Diffusion ds;
 		
-		_map.TryGetValue (coord, out ds);
+		AIMap.TryGetValue (coord, out ds);
 
 		return ds ? ds.getDirection () : Vector2.zero;
 	}
@@ -219,7 +246,7 @@ public class SquareGenerator : MonoBehaviour {
 		Coord coord = new Coord (x, y);
 		Diffusion ds;
 
-		_map.TryGetValue (coord, out ds);
+		AIMap.TryGetValue (coord, out ds);
 
 		if (ds)
 			ds.DiffuseValue (value, Vector2.zero);
@@ -229,7 +256,7 @@ public class SquareGenerator : MonoBehaviour {
 		Coord coord = new Coord(x, y);
 		Diffusion ds;
 
-		_map.TryGetValue (coord, out ds);
+		AIMap.TryGetValue (coord, out ds);
 
 		if (ds)
 			ds.VoidSquare();
@@ -243,7 +270,7 @@ public class SquareGenerator : MonoBehaviour {
 		Destroy (tileCollection);
 		tileCollection = new GameObject ();
 		tileCollection.name = "Tiles";
-		_map.Clear ();
+		AIMap.Clear ();
 	}
 	
 }

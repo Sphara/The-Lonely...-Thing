@@ -339,11 +339,13 @@ public class MapGenerator : MonoBehaviour {
 		}
 			
 		/* Grow grass */
+		NoiseGenerator grassGenerator = new NoiseGenerator ();
+
 		while (grassQueue.Count != 0) {
 
 			Coord tile = grassQueue.Dequeue ();
 
-			if (IsInMapRange (tile.x, tile.y + 1) && map[tile.x, tile.y + 1] == TileType.NONE) {
+			if (grassGenerator.PerlinNoise(tile.x, tile.y, 10, 1, 1) > 0.5f && IsInMapRange (tile.x, tile.y + 1) && map[tile.x, tile.y + 1] == TileType.NONE) {
 				map [tile.x, tile.y + 1] = grassList[UnityEngine.Random.Range (0, grassList.Count)];
 			}
 

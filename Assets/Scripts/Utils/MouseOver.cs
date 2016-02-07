@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 /// <summary>
 /// This is only a "temporary" fix while the terrain is made of tiles. Obviously when i switch to a mesh i'll have to change that
@@ -9,13 +10,28 @@ using System.Collections;
 
 public class MouseOver : MonoBehaviour {
 
+	public bool isLinkable;
+	public int xLinked;
+	public int yLinked;
+	List<MouseOver> linkedTiles = new List<MouseOver> ();
+
 	void OnMouseDown () {
 		DestroyTile ();
 	}
 
+	public void LinkTile (MouseOver m) {
+		linkedTiles.Add (m);
+	}
+
 	public void DestroyTile() {
-		SquareGenerator sg = GameObject.Find ("MapGenerator").GetComponent<SquareGenerator>();
-		sg.AddToMap ((int)transform.position.x, (int)transform.position.y);
-		this.gameObject.SetActive(false);
+		if (transform.gameObject.activeSelf) {
+			SquareGenerator sg = GameObject.Find ("MapGenerator").GetComponent<SquareGenerator> ();
+			sg.AddToMap ((int)transform.position.x, (int)transform.position.y);
+			this.gameObject.SetActive (false);
+
+			foreach (MouseOver m in linkedTiles) {
+				m.DestroyTile ();
+			}
+		}
 	}
 }
