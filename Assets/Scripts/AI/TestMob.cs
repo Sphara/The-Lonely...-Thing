@@ -9,6 +9,7 @@ using System.Collections;
 public class TestMob : MonoBehaviour {
 
 	Controller controller;
+	SpriteRenderer sr;
 	public Characteristics stats;
 	SquareGenerator sg;
 
@@ -20,10 +21,11 @@ public class TestMob : MonoBehaviour {
 	Vector3 velocity;
 
 	int targetDirection;
-	Vector2 direction;
+	public Vector2 direction;
 
 	void Start () {
 		stats = new Characteristics();
+		sr = GetComponent<SpriteRenderer> ();
 		sg = GameObject.Find ("MapGenerator").GetComponent<SquareGenerator>();
 		controller = GetComponent<Controller> ();
 		gravity = -(2 * stats.jumpHeight) / Mathf.Pow (stats.timeToJumpApex, 2);
@@ -36,6 +38,10 @@ public class TestMob : MonoBehaviour {
 			targetDirection = 1;
 		else if (controller.collisions.right && controller.collisions.below)
 			targetDirection = -1;
+		else if ((int)UnityEngine.Random.Range (0, 100) == 1 && targetDirection != 0) {
+			targetDirection = -targetDirection;
+		} else
+			targetDirection = 1;
 		
 		if ((int)UnityEngine.Random.Range (0, 100) == 1 && controller.collisions.below)
 			velocity.y = jumpVelocity;
@@ -49,22 +55,22 @@ public class TestMob : MonoBehaviour {
 
 	void GoToPlayer () {
 
+		if (direction.x == 99) {
+			targetDirection = 0;
+			return;
+		}
+
 		if (direction.x != 0 && direction.y != 0)
 			direction.y = 0;
 
 		if (direction.y == 1 && controller.collisions.below)
 			velocity.y = jumpVelocity;
 
-		if (direction.y != 0) {
-			targetDirection = -(int)Mathf.Sign(transform.position.x - Mathf.Round(transform.position.x));
-		} else {
-			targetDirection = (int)direction.x;
-		}
+		targetDirection = (int)direction.x;
+
 	}
 
 	void Update () {
-	
-		Vector3 newScale = transform.localScale;
 
 		if (controller.collisions.above || controller.collisions.below)
 			velocity.y = 0;
@@ -78,11 +84,10 @@ public class TestMob : MonoBehaviour {
 		velocity.x = Mathf.SmoothDamp(velocity.x, stats.moveSpeed * targetDirection, ref velocityXSmoothing, controller.collisions.below ? stats.groundedAcceleration : stats.airborneAcceleration);
 		velocity.y += gravity * Time.deltaTime;
 
-		newScale.x = -targetDirection;
-		transform.localScale = newScale;
-
-		if (sg)
-			sg.DisableSquare ((int)Mathf.Round(transform.position.x), (int)Mathf.Round(transform.position.y));
+		if (targetDirection == 1)
+			sr.flipX = true;
+		else
+			sr.flipX = false;
 	}
 
 	void FixedUpdate ()

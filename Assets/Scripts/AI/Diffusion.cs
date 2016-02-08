@@ -15,7 +15,7 @@ public class Diffusion : MonoBehaviour {
 
 	void Update () {
 		if (tileDiffusionValue > 0f)
-			tileDiffusionValue -= Time.deltaTime * 300;
+			tileDiffusionValue -= Time.deltaTime * 100;
 	}
 	
 	/// <summary>
@@ -41,6 +41,19 @@ public class Diffusion : MonoBehaviour {
 
 		}
 
+	}
+		
+	void OnDrawGizmos() {
+
+		if (tileDiffusionValue > 0) {
+			Vector3 v = new Vector3 ();
+			v = transform.position;
+
+			Color c = new Color (tileDiffusionValue / 30f, 0, tileDiffusionValue / 30f, 1);
+
+			Gizmos.color = c;
+			Gizmos.DrawWireSphere (v, 0.2f);
+		}
 	}
 
 	public void VoidSquare () {
@@ -73,6 +86,8 @@ public class Diffusion : MonoBehaviour {
 
 		if (greater == 0)
 			return Vector2.zero;
+		if (greater < tileDiffusionValue)
+			return new Vector2(99, 99);
 		if (greater == up)
 			newv.y = 1f;
 		if (greater == down)

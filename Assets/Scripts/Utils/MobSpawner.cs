@@ -36,7 +36,7 @@ public class MobSpawner : MonoBehaviour {
 			SpawnAnt();
 		}
 
-		if ((UnityEngine.Random.Range (0, 1000) == 1) && isSpawningMobs) {
+		if ((UnityEngine.Random.Range (0, 100) == 1) && isSpawningMobs) {
 			SpawnAnt();
 		}
 	}

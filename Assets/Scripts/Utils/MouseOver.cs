@@ -26,6 +26,11 @@ public class MouseOver : MonoBehaviour {
 	public void DestroyTile() {
 		if (transform.gameObject.activeSelf) {
 			SquareGenerator sg = GameObject.Find ("MapGenerator").GetComponent<SquareGenerator> ();
+			Diffusion d = GetComponent<Diffusion> ();
+
+			if (d)
+				sg.DeleteFromMap ((int)transform.position.x, (int)transform.position.y);
+
 			sg.AddToMap ((int)transform.position.x, (int)transform.position.y);
 			this.gameObject.SetActive (false);
 

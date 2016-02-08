@@ -139,8 +139,9 @@ public class SquareGenerator : MonoBehaviour {
 				tile.transform.parent = tileCollection.transform;
 				tileMap.Add (new Coord(i, j), tile);
 
-				if (map[i, j] == TileType.NONE)
-					AIMap.Add(new Coord(i, j), tile.GetComponent<Diffusion>());
+				Diffusion d = tile.GetComponent<Diffusion> ();
+				if (d)
+					AIMap.Add(new Coord(i, j), d);
 
 				MouseOver m = tile.GetComponent<MouseOver> ();
 				if (m && m.isLinkable) {
@@ -197,6 +198,13 @@ public class SquareGenerator : MonoBehaviour {
 		AttachNeighbours (x, y + 1);
 		AttachNeighbours (x, y - 1);
 		AttachNeighbours (x - 1, y);
+	}
+
+	public void DeleteFromMap(int x, int y) {
+		Coord c = new Coord (x, y);
+
+		if (AIMap.ContainsKey (c))
+			AIMap.Remove (c);
 	}
 
 	void AttachNeighbours(int x, int y) {
