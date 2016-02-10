@@ -45,8 +45,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Scripts\AI\BasicMob.cs" />
      <Compile Include="Assets\Scripts\AI\Diffusion.cs" />
-     <Compile Include="Assets\Scripts\AI\TestMob.cs" />
+     <Compile Include="Assets\Scripts\AI\FlyingBasicMob.cs" />
      <Compile Include="Assets\Scripts\Controllers\CameraController.cs" />
      <Compile Include="Assets\Scripts\Controllers\CollisionController.cs" />
      <Compile Include="Assets\Scripts\Controllers\Controller.cs" />

@@ -96,6 +96,14 @@ public class Controller : MonoBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// Do a manual raycast from the controller attached to this gameobject
+	/// </summary>
+	/// <returns>The raycast hit, if any.</returns>
+	/// <param name="hitLayer">The layer you want to hit.</param>
+	/// <param name="direction">The direction you want to cast your ray : 1/-1</param>
+	/// <param name="axis">The axis you want to cast on : 0 horizontal, 1 vertical</param>
+	/// <param name="length">Length.</param>
 	public RaycastHit2D ManualRayCast(LayerMask hitLayer, float direction, int axis, float length) {
 		if (axis == 0)
 			return ManualHorizontalRayCast (hitLayer, direction, length);

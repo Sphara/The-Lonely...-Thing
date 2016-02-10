@@ -1,6 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// NOT USED ANYMORE
+/// </summary>
+
 public class GeneralMobController : CollisionController {
 
 	protected override void DispatchVerticalCollision(RaycastHit2D hit, ref Vector3 velocity, ref float YDirection, ref float rayLength) {
@@ -18,7 +22,7 @@ public class GeneralMobController : CollisionController {
 			collisions.below = YDirection == -1;
 			break;
 		case 8: // P-layer
-			hit.transform.gameObject.GetComponent<Player>().stats.TakeContactHit(this.GetComponent<TestMob>().stats);
+			hit.transform.gameObject.GetComponent<Player>().stats.TakeContactHit(this.GetComponent<BasicMob>().stats);
 			break;
 		default:
 			Debug.Log (this.name + " collided with " + hit.transform.gameObject.name + " from layer " + hit.transform.gameObject.layer + " and failed to react");
@@ -59,7 +63,7 @@ public class GeneralMobController : CollisionController {
 			}
 			break;
 		case 8: // P-layer
-			hit.transform.gameObject.GetComponent<Player>().stats.TakeContactHit(this.GetComponent<TestMob>().stats);
+			hit.transform.gameObject.GetComponent<Player>().stats.TakeContactHit(this.GetComponent<BasicMob>().stats);
 			break;
 		default:
 			Debug.Log (this.name + " collided with " + hit.transform.gameObject.name + " from layer " + hit.transform.gameObject.layer + " and failed to react");

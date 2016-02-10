@@ -2,11 +2,11 @@
 using System.Collections;
 
 /// <summary>
-/// Test mob. An ant, actually.
+/// A basic test mob. An ant, actually.
 /// </summary>
 
 [RequireComponent(typeof(Controller))]
-public class TestMob : MonoBehaviour {
+public class BasicMob : MonoBehaviour {
 
 	Controller controller;
 	SpriteRenderer sr;
@@ -58,9 +58,7 @@ public class TestMob : MonoBehaviour {
 	void GoToPlayer () {
 
 		if (direction.y != 0) {
-			if (direction.x != 0) {
-				direction.y = 0;
-			} else {
+			if (direction.x == 0) {
 				targetDirection = -(int)Mathf.Sign (transform.position.x - Mathf.Round (transform.position.x));
 			}
 		} else {

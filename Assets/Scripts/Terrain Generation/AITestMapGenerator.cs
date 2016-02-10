@@ -15,7 +15,7 @@ public class AITestMapGenerator : MonoBehaviour {
 
 				if (i == 0 || j == 0 || i == 29 || j == 29) {
 					map [i, j] = TileType.LIMITS;
-				} else if (j > 15) {
+				} else if (j > 15 || (j > 13 && j < 15 && i > 13 && i < 17)) {
 					map [i, j] = TileType.NONE;
 				} else {
 					map [i, j] = TileType.DIRT;
