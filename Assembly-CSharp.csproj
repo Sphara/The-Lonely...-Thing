@@ -48,6 +48,7 @@
      <Compile Include="Assets\Scripts\AI\BasicMob.cs" />
      <Compile Include="Assets\Scripts\AI\Diffusion.cs" />
      <Compile Include="Assets\Scripts\AI\FlyingBasicMob.cs" />
+     <Compile Include="Assets\Scripts\AI\MobSpawner.cs" />
      <Compile Include="Assets\Scripts\Controllers\CameraController.cs" />
      <Compile Include="Assets\Scripts\Controllers\CollisionController.cs" />
      <Compile Include="Assets\Scripts\Controllers\Controller.cs" />
@@ -68,7 +69,6 @@
      <Compile Include="Assets\Scripts\Utils\GameDefines.cs" />
      <Compile Include="Assets\Scripts\Utils\HUDFPS.cs" />
      <Compile Include="Assets\Scripts\Utils\Interfaces.cs" />
-     <Compile Include="Assets\Scripts\Utils\MobSpawner.cs" />
      <Compile Include="Assets\Scripts\Utils\MouseOver.cs" />
      <Compile Include="Assets\Scripts\Utils\NoiseGenerator.cs" />
      <Compile Include="Assets\Scripts\Utils\Shovel.cs" />

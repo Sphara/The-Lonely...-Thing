@@ -435,8 +435,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tp: {fileID: 1179565592}
-  antMob: {fileID: 196662, guid: da4b0196e420ecb4db9627671841fdf0, type: 2}
+  BasicMob: {fileID: 196662, guid: da4b0196e420ecb4db9627671841fdf0, type: 2}
+  FlyingMob: {fileID: 118202, guid: 8a7181002eee9624fb6326e96f3350c3, type: 2}
+  mobsMaximumCount: 10
+  mobsPopCooldown: 1
   isSpawningMobs: 0
+  chanceToPopEachFrame: 10
 --- !u!4 &1197067475
 Transform:
   m_ObjectHideFlags: 0

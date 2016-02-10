@@ -15,7 +15,6 @@ public class FlyingBasicMob : MonoBehaviour {
 	float velocityYSmoothing;
 	int targetXDirection;
 	int targetYDirection;
-	int XPlannedDirection;
 
 	void Start () {
 		c = GetComponent<Controller> ();
@@ -24,8 +23,6 @@ public class FlyingBasicMob : MonoBehaviour {
 		velocity = new Vector3 ();
 		direction = new Vector2 ();
 		stats = new Characteristics ();
-
-		XPlannedDirection = UnityEngine.Random.Range (0, 2) == 0 ? 1 : -1;
 	}
 		
 	void Update () {
@@ -63,8 +60,11 @@ public class FlyingBasicMob : MonoBehaviour {
 
 	void RandomMovement () {
 
-		targetYDirection = 0;
-		targetXDirection = XPlannedDirection;
+		if (targetXDirection == 0)
+			targetXDirection = 1;
+
+		targetYDirection = (int)Mathf.Sign(Mathf.Cos(Time.timeSinceLevelLoad));
+		targetXDirection = UnityEngine.Random.Range(0, 10000) == 1 ? -targetXDirection : targetXDirection;
 
 		RaycastHit2D hit = c.ManualRayCast (c.collisionMask, -1f, 1, 5f);
 		if (hit) {
@@ -79,13 +79,11 @@ public class FlyingBasicMob : MonoBehaviour {
 		hit = c.ManualRayCast (c.collisionMask, 1f, 0, 3f);
 		if (hit) {
 			targetXDirection = -1;
-			XPlannedDirection = -1;
 		}
 
 		hit = c.ManualRayCast (c.collisionMask, -1f, 0, 3f);
 		if (hit) {
 			targetXDirection = 1;
-			XPlannedDirection = 1;
 		}
 	}
 
