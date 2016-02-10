@@ -42,7 +42,9 @@ public class Diffusion : MonoBehaviour {
 		}
 
 	}
-		
+
+	/* This stays commented because it's literally eating my fps, and is only useful for AI debug */
+
 	void OnDrawGizmos() {
 
 		if (tileDiffusionValue > 0) {
@@ -86,8 +88,6 @@ public class Diffusion : MonoBehaviour {
 
 		if (greater == 0)
 			return Vector2.zero;
-		if (greater < tileDiffusionValue)
-			return new Vector2(99, 99);
 		if (greater == up)
 			newv.y = 1f;
 		if (greater == down)

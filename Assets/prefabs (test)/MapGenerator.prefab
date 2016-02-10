@@ -1,0 +1,129 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &179170
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 412122}
+  - 114: {fileID: 11448152}
+  - 114: {fileID: 11411322}
+  - 114: {fileID: 11442350}
+  m_Layer: 0
+  m_Name: MapGenerator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &412122
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 179170}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+--- !u!114 &11411322
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 179170}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e7efcff1f59983479b5a1f9a5eae8d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &11442350
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 179170}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e52514625b363b5469f2044136352df7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DIRT: {fileID: 102572, guid: 41444f895ed540d4bb7c5652aaf94561, type: 2}
+  DIRT_GRAVEL: {fileID: 102572, guid: 5377f6b44dbbf1e47ae9d5764f613850, type: 2}
+  GRASS: {fileID: 152796, guid: 6f5e22865d693224680eb85e59047840, type: 2}
+  GREYSAND: {fileID: 102572, guid: 107421a8d024a684bade691678dd072a, type: 2}
+  GREYSTONE: {fileID: 102572, guid: 510a61bcaa7eda344a93f27cc1ceb55f, type: 2}
+  GREYSTONE_RUBY: {fileID: 102572, guid: bb5faaefdc7b0344ba2f646ecbd96211, type: 2}
+  GREYSTONE_RUBY_ALT: {fileID: 102572, guid: 107e298956b2a5042ac735a9451d1661, type: 2}
+  GREYSTONE_SAND: {fileID: 102572, guid: 08b09fad47ed41e4988d8b20fe3dc66d, type: 2}
+  REDSAND: {fileID: 102572, guid: 41c6bfe08e5d24445b439719dc6abe7c, type: 2}
+  REDSTONE: {fileID: 102572, guid: 85170b08b07afc04d84d56d2d6c207e2, type: 2}
+  REDSTONE_EMERALD: {fileID: 102572, guid: 975016143fb3d9a44a7f2373697adc4a, type: 2}
+  REDSTONE_EMERALD_ALT: {fileID: 102572, guid: 8d02215456688b148b912c5c40cf3b27, type: 2}
+  REDSTONE_SAND: {fileID: 102572, guid: 2eeeb3218d7f90e49a9313e0b098ad7a, type: 2}
+  DIRT_SAND: {fileID: 102572, guid: c89080397b77ab34fbf60b6d9343eeb3, type: 2}
+  SAND: {fileID: 102572, guid: 7264020f4b416f048a7463d1d4c5d63f, type: 2}
+  DIRT_SNOW: {fileID: 102572, guid: e1e2c821fd287dc4494a78913a2bdc81, type: 2}
+  SNOW: {fileID: 102572, guid: 69f1125acba20d44e941414288188b47, type: 2}
+  STONE: {fileID: 102572, guid: a09b4bf3758ea7f4bb14ab30e09e9754, type: 2}
+  STONE_SNOW: {fileID: 102572, guid: a9f6a362eb42db4478d3d62ee0ba782f, type: 2}
+  STONE_SAND: {fileID: 102572, guid: 307191c761a84444dbd3f3c26740637f, type: 2}
+  STONE_COPPER: {fileID: 102572, guid: 9a7c070d61e564a4c9657ea304fdc7f9, type: 2}
+  STONE_COPPER_ALT: {fileID: 102572, guid: b224a01f90288ee44a08366c589851d8, type: 2}
+  STONE_IRON: {fileID: 102572, guid: 29233e88b42cfcd4ab0f35292dd006ba, type: 2}
+  STONE_IRON_ALT: {fileID: 102572, guid: 8e3a2e9e5e3f5234590a7aa4bcde6adb, type: 2}
+  STONE_GOLD: {fileID: 102572, guid: 8ce520595c1f3e34b91c4f5a9c0c3d90, type: 2}
+  STONE_GOLD_ALT: {fileID: 102572, guid: 8e3a2e9e5e3f5234590a7aa4bcde6adb, type: 2}
+  STONE_COAL: {fileID: 102572, guid: 24d6695781ab11a4fb29caac02594dad, type: 2}
+  STONE_COAL_ALT: {fileID: 102572, guid: bfe722baf18f0dc4b9928105bdc931ec, type: 2}
+  STONE_DIAMOND: {fileID: 102572, guid: 953d11a58d86f8a44a9c15bc83a0866a, type: 2}
+  STONE_DIAMOND_ALT: {fileID: 102572, guid: 9d5c6cf7ccc2c9c4c86210fb0d76d6a9, type: 2}
+  STONE_SILVER: {fileID: 102572, guid: 636c150e5c8f3b54c8528d62bceee972, type: 2}
+  STONE_SILVER_ALT: {fileID: 102572, guid: 12a916ea0f3651544aad3831978d7829, type: 2}
+  STONE_GRASS: {fileID: 102572, guid: b14924532342cc64f8e2d985cc77e974, type: 2}
+  STONE_DIRT: {fileID: 102572, guid: 1c36cccda062f07478d39614ee1fa2ff, type: 2}
+  LIMITS: {fileID: 102572, guid: 6665d641daa989a449eab2848f2bcadd, type: 2}
+  EMPTY: {fileID: 102572, guid: 45c32658d9f291541a1c35ccbcdeb91d, type: 2}
+  GROWNGRASS_1: {fileID: 152796, guid: c2cd743ef37bbe74996196270c47247a, type: 2}
+  GROWNGRASS_2: {fileID: 152796, guid: 860aeb575b20794478e1a9ae46a24a3d, type: 2}
+  GROWNGRASS_3: {fileID: 152796, guid: 30b52c6574e06964aa1540875b81f811, type: 2}
+  GROWNGRASS_4: {fileID: 152796, guid: 1c7203844ff1f7740b83840c45408b3c, type: 2}
+--- !u!114 &11448152
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 179170}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1afd0690ee8f82d47b7dd22f38d8fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  width: 200
+  height: 100
+  seed: 1
+  useRandomSeed: 1
+  borderSize: 1
+  smoothingFactor: 10
+  randomFillPercent: 51
+  groundLevel: 50
+  crustHeight: 5
+  teleporter: {fileID: 0}
+  mobSpawner: {fileID: 0}
+  player: {fileID: 0}
+  mineralFarm: {fileID: 11411322}
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 179170}
+  m_IsPrefabParent: 1

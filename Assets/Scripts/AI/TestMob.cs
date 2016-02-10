@@ -34,14 +34,16 @@ public class TestMob : MonoBehaviour {
 	}
 
 	void RandomMovement () {
+
+		if (targetDirection == 0)
+			targetDirection = UnityEngine.Random.Range(0, 2) == 0 ? 1 : -1;
+
 		if (controller.collisions.left && controller.collisions.below)
 			targetDirection = 1;
 		else if (controller.collisions.right && controller.collisions.below)
 			targetDirection = -1;
-		else if ((int)UnityEngine.Random.Range (0, 100) == 1 && targetDirection != 0) {
+		else if ((int)UnityEngine.Random.Range (0, 100) == 1)
 			targetDirection = -targetDirection;
-		} else
-			targetDirection = 1;
 		
 		if ((int)UnityEngine.Random.Range (0, 100) == 1 && controller.collisions.below)
 			velocity.y = jumpVelocity;
@@ -55,19 +57,18 @@ public class TestMob : MonoBehaviour {
 
 	void GoToPlayer () {
 
-		if (direction.x == 99) {
-			targetDirection = 0;
-			return;
+		if (direction.y != 0) {
+			if (direction.x != 0) {
+				direction.y = 0;
+			} else {
+				targetDirection = -(int)Mathf.Sign (transform.position.x - Mathf.Round (transform.position.x));
+			}
+		} else {
+			targetDirection = (int)direction.x;
 		}
-
-		if (direction.x != 0 && direction.y != 0)
-			direction.y = 0;
-
+			
 		if (direction.y == 1 && controller.collisions.below)
 			velocity.y = jumpVelocity;
-
-		targetDirection = (int)direction.x;
-
 	}
 
 	void Update () {

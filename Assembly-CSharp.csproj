@@ -58,6 +58,7 @@
      <Compile Include="Assets\Scripts\Controllers\Platforms\VerticalPlatformFunc.cs" />
      <Compile Include="Assets\Scripts\Controllers\Platforms\WayPointsPlatformController.cs" />
      <Compile Include="Assets\Scripts\Player.cs" />
+     <Compile Include="Assets\Scripts\Terrain Generation\AITestMapGenerator.cs" />
      <Compile Include="Assets\Scripts\Terrain Generation\MapGenerator.cs" />
      <Compile Include="Assets\Scripts\Terrain Generation\MineralFarm.cs" />
      <Compile Include="Assets\Scripts\Terrain Generation\SquareGenerator.cs" />
